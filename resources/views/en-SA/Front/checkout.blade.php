@@ -10,10 +10,11 @@ use App\Helpers\Common;
 #echo "<pre>";print_r(Common::getCountryArray());"</pre>";exit;
 
 
+$countries = \DB::table('countries')->get();
+$states = \DB::table('states')->take(20)->get();
 $address_data = json_decode($usersInfo->shipping_address);
 
 ?>
-
 <section class="checkout_page">
     <div class="container-fluid">
         <div class="row px-xl-5">
@@ -25,13 +26,14 @@ $address_data = json_decode($usersInfo->shipping_address);
             		<a class="text-dark pl-2 pr-2" href="javascript:void(0);">@if(session('locale')=='en')  Payment @elseقسط   @endif</a>
             	</p>
             </div>
-            <form action="{{route('pay')}}" method="POST" > 
+            <form action="{{route('pay')}}" method="POST" autocomplete="off" autofill="off"> 
                         {{ csrf_field() }}
                         <div class="row col-lg-12">
                 <div class="col-lg-7">
                     <!-- <h5 class="section-title position-relative text-uppercase mb-3"><span class="bg-secondary pr-3">@if(session('locale')=='en')  Billing Address @else  عنوان وصول الفواتير  @endif</span></h5> -->
                     <div class="bg-light p-30 mb-5">
                         <div class="row">
+                            <div id="show-errors" style="color: red; margin-left: 30%; margin-bottom: 14px;"></div>
                         	<div class="col-md-12">
     	                        <div class="form-group">
     	                            <label class="sr-only">First Name</label>
@@ -87,20 +89,34 @@ $address_data = json_decode($usersInfo->shipping_address);
                                 <div class="form-group ">
                                 <label class="fixTopFild">Country</label>
                                 <select required class="custom-select" name="country" id="country">
-                                @foreach(Common::getCountryArray() as $country)
-                                <option value="{{$country}}" @if($country == @$address_data->country) selected @endif>{{$country}}</option> 
+                                @foreach($countries as $country)
+                                <option value="{{$country->Code}}" @if($country->Code == 'SA') selected @endif @if($country->Code == @$address_data->country) selected @endif>{{$country->Name}}</option> 
                                  @endforeach
                                 </select>	 
                                   
                                 </div>
                             </div>
 
+
                             <div class="col-md-4">
+                                <div class="form-group ">
+                                <label class="fixTopFild">State</label>
+                                <select class="custom-select" name="state" id="state">
+                                    <option>Select State</option>
+                                {{-- @foreach($states as $state)
+                                <option value="{{$state->Name}}" @if($state->Name == @$address_data->state) selected @endif>{{$state->Name}}</option> 
+                                 @endforeach --}}
+                                </select>    
+                                  
+                                </div>
+                            </div>
+
+                            {{-- <div class="col-md-4">
                                 <div class="form-group ">
                                     <label class="sr-only">State</label>
     	                            <input class="form-control" type="text" placeholder="District" value="{{ @$address_data->state }}" name="state" id="state">
                                 </div>
-                            </div>
+                            </div> --}}
 
                             <div class="col-md-4">
     	                        <div class="form-group">
@@ -279,37 +295,15 @@ $address_data = json_decode($usersInfo->shipping_address);
                         	</table>
                             <?php
 
-                            //The VAT rate / percentage.
-                            $vat = 15;
-
-                            //The price, excluding VAT.
-                            $priceExcludingVat = \Cart::getTotal();
-
-                            //Calculate how much VAT needs to be paid.
-                            $vatToPay = ($priceExcludingVat / 100) * $vat;
-
-                            //The total price, including VAT.
-                            $totalPrice = $priceExcludingVat + $vatToPay;      
-                            Session::forget('totalAmountForPaidAfterDiscountAndGST');
-                            Session::forget('vatToPay');
-                            
-                            session()->put('totalAmountForPaidAfterDiscountAndGST',$totalPrice);  
-                            session()->put('vatToPay',$vatToPay);               
+                            $totalPrice = \Cart::getTotal();               
                         ?>
 
                             
-                        	
-                        		<table class="w-100 mt-3">
-                        		<tr>
-                        			<td><p class="ml-3">@if(session('locale')=='en') Tax (VAT 15%)  @else  المجموع الفرعي   @endif</p></td>
-                        			<td class="text-right text-dark"><?=$vatToPay;?></td>
-                        		</tr>
-                        		
-                        	</table>
                         		<table class="w-100 mt-3">
                         		<tr>
                         			<td><p class="ml-3">@if(session('locale')=='en') Shipping Charges    @else  المجموع الفرعي   @endif</p></td>
-                        			<td class="text-right text-dark">00.00 SAR</td>
+                                    <input type="hidden" id="shippingCharges" value="0" name="shipping_charges">
+                        			<td class="text-right text-dark"><span id="shipping_charges">00.00</span> SAR</td>
                         		</tr>
                         		
                         	</table>
@@ -319,16 +313,17 @@ $address_data = json_decode($usersInfo->shipping_address);
                         
                         		<tr>
                         			<td ><p class="ml-3"><b>@if(session('locale')=='en') Total @else المجموع    @endif</b></p></td>
-                        			<td class="text-right text-dark"><h3>{{ ($totalPrice) }} SAR</h3></td>
+                                    <input type="hidden" value="{ $totalPrice }}" name="total_price" id="Total_price">
+                        			<td class="text-right text-dark"><h3><span id="TotalPrice">{{ $totalPrice }}</span> SAR</h3></td>
                         		</tr>
                         	</table>
                             <input type="hidden" name="productname" value="{{ isset($subcategory->name) ? $subcategory->name : '' }}">
                             <input type="hidden" name="productprice" value="1">
                             <input type="hidden" name="mb_language" value="en-SA">
                             <div class="col p-0 btn-group">
-                                <button type="submit" name="submit" formaction="{{route('payForCashOnDelivery')}}" class="btn btn-info font-weight-bold py-2" value="Cash On Delivery">Cash On Delivery</button>
+                                <button type="submit" name="submit" formaction="{{route('payForCashOnDelivery')}}" class="btn btn-info font-weight-bold py-2" value="Cash On Delivery" disabled>Cash On Delivery</button>
                                 <!--<a href="#" class="btn btn-block btn-primary font-weight-bold py-2">@if(session('locale')=='en') Pay Now @else ادفع الآن   @endif</a>-->
-                                <button name="submit" class="btn btn-primary font-weight-bold py-2">@if(session('locale')=='en') Pay Now @else ادفع الآن   @endif</button>
+                                <button type="submit" name="submit" class="btn btn-primary font-weight-bold py-2" disabled>@if(session('locale')=='en') Pay Now @else ادفع الآن   @endif</button>
                             </div>
                         </div>                 
                     </div>
@@ -344,4 +339,89 @@ $address_data = json_decode($usersInfo->shipping_address);
 
 @endsection
 @section('javascript')
+<script>
+    $(function() {
+        $("#postcode").trigger('keyup');
+        $('select[name=country]').change(function() {
+            $("#city").val('');
+            $("#postcode").val('').trigger('change');
+           $.ajax({
+
+              url: '/state/ajax/'+$(this).val(),
+            method: 'get',
+            headers:{
+              'X-CSRF-TOKEN' : '{{ csrf_token() }}'
+          },
+        success: function (data) {  
+          $('select[name="state"]').empty();
+            $.each(data, function(key, value) {
+                $('select[name="state"]').append('<option value="'+ value +'">'+ value +'</option>');
+                });
+        },
+        }); 
+
+
+         
+        });
+    });
+
+    $("#state").change(function(event) {
+        $("#city").val('');
+        $("#postcode").val('').trigger('change');
+    });
+    $("#city").change(function(event) {
+        $("#postcode").val('').trigger('change');
+    });
+
+    $(document).on("keyup", "#postcode", function() {
+        $("#show-errors").html('');
+        var postalCode = $('#postcode').val();
+        if(postalCode.length > 3){
+            var url = "{{ route('validate-post-address') }}";
+            var id= 
+            $.ajax({
+                url: url,
+                type: "POST",
+                cache: false,
+                data:{
+                    _token:'{{ csrf_token() }}',
+                    address: $('#address').val(),
+                    postcode: $('#postcode').val(),
+                    state: $('#state').val(),
+                    country: $('#country').val(),
+                    city: $('#city').val()
+                },
+                beforeSend: function() {
+                    $("#loading-image").show();
+                },
+                success: function(dataResult){
+                    $("#loading-image").hide();
+                    if (dataResult.success) {
+                        $("#show-errors").html('');
+                        $("#shipping_charges").html(dataResult.data.Value);
+                        $("#shippingCharges").val(dataResult.data.Value);
+                        var total = parseFloat("{{ $totalPrice }}");
+                        var shipping = parseFloat(dataResult.data.Value);
+                        $("#TotalPrice").html(total+shipping)
+                        $("#Total_price").val(total+shipping);
+
+                        $('button[type="submit"]').prop('disabled', false)
+                    }else{
+
+                        if(typeof dataResult.data[2] != "undefined")
+                            $("#show-errors").html(dataResult.data[0].Message+', '+dataResult.data[1].Message+', '+dataResult.data[2].Message);
+                        else if(typeof dataResult.data[1] != "undefined")
+                            $("#show-errors").html(dataResult.data[0].Message+', '+dataResult.data[1].Message);
+                        else
+                            $("#show-errors").html(dataResult.data[0].Message);
+
+                        $('button[type="submit"]').prop('disabled', true)
+                    }
+                }
+            });
+        }
+    });
+
+
+</script>
 @endsection

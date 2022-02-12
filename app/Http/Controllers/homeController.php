@@ -113,7 +113,7 @@ class homeController extends Controller
                 "UserName": "reem@reem.com",
                 "Password": "123456789",
                 "Version": "v1",
-                "AccountNumber": "20016",
+                "AccountNumber": "4004636",
                 "AccountPin": "331421",
                 "AccountEntity": "AMM",
                 "AccountCountryCode": "JO",
@@ -153,9 +153,79 @@ class homeController extends Controller
     }
 
 
-    public function calculateRate($CountryCode='',$StateOrProvinceCode='',$City='',$PostCode='',$Line1='',$Line2='',$Line3='')
+    public function calculateRate($data)
     {
         $curl = curl_init();
+
+        $arrayVar = [
+            "ClientInfo" => [
+                "UserName" => "reem@reem.com",
+                "Password" => "123456789",
+                "Version" => "1.0",
+                "AccountNumber" => "4004636",
+                "AccountPin" => "432432",
+                "AccountEntity" => "RUH",
+                "AccountCountryCode" => "SA",
+                "Source" => 24,
+            ],
+            "DestinationAddress" => [
+                "Line1" => $data['address'],
+                "Line2" => $data['address'],
+                "Line3" => "",
+                "City" => $data['city'],
+                "StateOrProvinceCode" => $data['state'],
+                "PostCode" => $data['postcode'],
+                "CountryCode" => $data['country'],
+                "Longitude" => 0,
+                "Latitude" => 0,
+                "BuildingNumber" => null,
+                "BuildingName" => null,
+                "Floor" => null,
+                "Apartment" => null,
+                "POBox" => null,
+                "Description" => null,
+            ],
+            "OriginAddress" => [
+                "Line1" => "Horizons Rareness Trading EST",
+                "Line2" => "office No.2",
+                "Line3" => "floor No. 1 dmmam branch road, al shohada ",
+                "City" => "Riyadh",
+                "StateOrProvinceCode" => "",
+                "PostCode" => "12173",
+                "CountryCode" => "SA",
+                "Longitude" => 0,
+                "Latitude" => 0,
+                "BuildingNumber" => null,
+                "BuildingName" => null,
+                "Floor" => 1,
+                "Apartment" => null,
+                "POBox" => null,
+                "Description" => "Saudi Arabia",
+            ],
+            "PreferredCurrencyCode" => "SAR",
+            "ShipmentDetails" => [
+                "Dimensions" => null,
+                "ActualWeight" => ["Unit" => "KG", "Value" => 1],
+                "ChargeableWeight" => null,
+                "DescriptionOfGoods" => null,
+                "GoodsOriginCountry" => null,
+                "NumberOfPieces" => 1,
+                "ProductGroup" => "EXP",
+                "ProductType" => "PPX",
+                "PaymentType" => "P",
+                "PaymentOptions" => "",
+                "CustomsValueAmount" => null,
+                "CashOnDeliveryAmount" => null,
+                "InsuranceAmount" => null,
+                "CashAdditionalAmount" => null,
+                "CashAdditionalAmountDescription" => null,
+                "CollectAmount" => null,
+                "Services" => "",
+                "Items" => null,
+                "DeliveryInstructions" => null,
+            ]
+        ];
+        $dataArray = json_encode($arrayVar,true);
 
         curl_setopt_array($curl, array(
           CURLOPT_URL => 'https://ws.dev.aramex.net/ShippingAPI.V2/RateCalculator/Service_1_0.svc/json/CalculateRate',
@@ -166,108 +236,176 @@ class homeController extends Controller
           CURLOPT_FOLLOWLOCATION => true,
           CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
           CURLOPT_CUSTOMREQUEST => 'POST',
-          CURLOPT_POSTFIELDS =>'{
-            "ClientInfo": {
-                "UserName": "reem@reem.com",
-                "Password": "123456789",
-                "Version": "1.0",
-                "AccountNumber": "4004636",
-                "AccountPin": "432432",
-                "AccountEntity": "RUH",
-                "AccountCountryCode": "SA",
-                "Source": 24
-                },
-                "DestinationAddress": {
-                    "Line1": "XYZ Street",
-                    "Line2": "Unit # 1",
-                    "Line3": "",
-                    "City": "Delhi",
-                    "StateOrProvinceCode": "Delhi",
-                    "PostCode": "110093",
-                    "CountryCode": "IN",
-                    "Longitude": 0,
-                    "Latitude": 0,
-                    "BuildingNumber": null,
-                    "BuildingName": null,
-                    "Floor": null,
-                    "Apartment": null,
-                    "POBox": null,
-                    "Description": null
-                    },
-                    "OriginAddress": {
-                        "Line1": "ABC Street",
-                        "Line2": "Unit # 1",
-                        "Line3": "",
-                        "City": "Amman",
-                        "StateOrProvinceCode": "",
-                        "PostCode": "",
-                        "CountryCode": "JO",
-                        "Longitude": 0,
-                        "Latitude": 0,
-                        "BuildingNumber": null,
-                        "BuildingName": null,
-                        "Floor": null,
-                        "Apartment": null,
-                        "POBox": null,
-                        "Description": null
-                        },
-                        "PreferredCurrencyCode": "SAR",
-                        "ShipmentDetails": {
-                            "Dimensions": null,
-                            "ActualWeight": {
-                                "Unit": "KG",
-                                "Value": 1
-                                },
-                                "ChargeableWeight": null,
-                                "DescriptionOfGoods": null,
-                                "GoodsOriginCountry": null,
-                                "NumberOfPieces": 1,
-                                "ProductGroup": "EXP",
-                                "ProductType": "PPX",
-                                "PaymentType": "P",
-                                "PaymentOptions": "",
-                                "CustomsValueAmount": null,
-                                "CashOnDeliveryAmount": null,
-                                "InsuranceAmount": null,
-                                "CashAdditionalAmount": null,
-                                "CashAdditionalAmountDescription": null,
-                                "CollectAmount": null,
-                                "Services": "",
-                                "Items": null,
-                                "DeliveryInstructions": null
-                                },
-                                "Transaction": {
-                                    "Reference1": "",
-                                    "Reference2": "",
-                                    "Reference3": "",
-                                    "Reference4": "",
-                                    "Reference5": ""
-                                }
-                            }',
-                            CURLOPT_HTTPHEADER => array(
-                                'Content-Type: application/json',
-                                'Accept: application/json'
-                            ),
-                        ));
+          CURLOPT_POSTFIELDS =>$dataArray,
+          CURLOPT_HTTPHEADER => array(
+            'Content-Type: application/json',
+            'Accept: application/json'
+        ),
+      ));
 
-$response = curl_exec($curl);
+        $response = curl_exec($curl);
 
-$result = json_decode($response,true);
+        $result = json_decode($response,true);
 
-if ($result['HasErrors']) {
-    foreach ($result['Notifications'] as $key => $Notifications) {
-        echo $Notifications['Message'];
-    }
-}
+        if ($result['HasErrors']) {
+            foreach ($result['Notifications'] as $key => $Notifications) {
+                echo $Notifications['Message'];
+            }
+        }
 
-curl_close($curl);
+        curl_close($curl);
 
-
+return $result['TotalAmount'];
 // echo $response;
-echo "<pre>";print_r($result['TotalAmount']);"</pre>";exit;
-die();
+        echo "<pre>";print_r($result['TotalAmount']);"</pre>";exit;
+        die();
 
-}
+    }
+
+
+    public function validatePostAddress(Request $request)
+    {
+        $curl = curl_init();
+
+        $arrayVar = [
+            "Address" => [
+                "Line1" => $request->address,
+                "Line2" => $request->address,
+                "Line3" => "",
+                "City" => $request->city,
+                "StateOrProvinceCode" => $request->state,
+                "PostCode" => $request->postcode,
+                "CountryCode" => $request->country,
+                "Longitude" => 0,
+                "Latitude" => 0,
+                "BuildingNumber" => null,
+                "BuildingName" => null,
+                "Floor" => null,
+                "Apartment" => null,
+                "POBox" => null,
+                "Description" => null,
+            ],
+            "ClientInfo" => [
+                "UserName" => "reem@reem.com",
+                "Password" => "123456789",
+                "Version" => "1.0",
+                "AccountNumber" => "4004636",
+                "AccountPin" => "432432",
+                "AccountEntity" => "RUH",
+                "AccountCountryCode" => "SA",
+                "Source" => 24,
+            ],
+        ];
+
+        $arrayVar = json_encode($arrayVar,true);
+
+
+        curl_setopt_array($curl, array(
+          CURLOPT_URL => 'https://ws.dev.aramex.net/ShippingAPI.V2/Location/Service_1_0.svc/json/ValidateAddress',
+          CURLOPT_RETURNTRANSFER => true,
+          CURLOPT_ENCODING => '',
+          CURLOPT_MAXREDIRS => 10,
+          CURLOPT_TIMEOUT => 0,
+          CURLOPT_FOLLOWLOCATION => true,
+          CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+          CURLOPT_CUSTOMREQUEST => 'POST',
+          CURLOPT_POSTFIELDS =>$arrayVar,
+                CURLOPT_HTTPHEADER => array(
+                    'Content-Type: application/json',
+                    'Accept: application/json'
+                ),
+            ));
+
+        $response = curl_exec($curl);
+
+        curl_close($curl);
+        // echo $response;
+
+        $result = json_decode($response,true);
+
+        if(!$result['HasErrors']){
+            $data = $request->all();
+            // echo "<pre>";print_r($data);"</pre>";exit;
+            return response()->json([
+                'success' => true,
+                'data' => $this->calculateRate($data),
+            ]);
+        }else{
+            return response()->json([
+                'success' => false,
+                'data' => $result['Notifications'],
+            ]);
+        }
+
+        
+    
+    }
+
+    public function validateAddress($value='')
+    {
+
+        $curl = curl_init();
+
+
+        $arrayVar = [
+            "Address" => [
+                "Line1" => "ABC Street",
+                "Line2" => "Unit # 1",
+                "Line3" => "",
+                "City" => "new delhi",
+                "StateOrProvinceCode" => "Delhi",
+                "PostCode" => "110091",
+                "CountryCode" => "IN",
+                "Longitude" => 0,
+                "Latitude" => 0,
+                "BuildingNumber" => null,
+                "BuildingName" => null,
+                "Floor" => null,
+                "Apartment" => null,
+                "POBox" => null,
+                "Description" => null,
+            ],
+            "ClientInfo" => [
+                "UserName" => "reem@reem.com",
+                "Password" => "123456789",
+                "Version" => "v1",
+                "AccountNumber" => "4004636",
+                "AccountPin" => "331421",
+                "AccountEntity" => "AMM",
+                "AccountCountryCode" => "JO",
+                "Source" => 24,
+            ],
+            "Transaction" => [
+                "Reference1" => "",
+                "Reference2" => "",
+                "Reference3" => "",
+                "Reference4" => "",
+                "Reference5" => "",
+            ],
+        ];
+
+
+        curl_setopt_array($curl, array(
+          CURLOPT_URL => 'https://ws.dev.aramex.net/ShippingAPI.V2/Location/Service_1_0.svc/json/ValidateAddress',
+          CURLOPT_RETURNTRANSFER => true,
+          CURLOPT_ENCODING => '',
+          CURLOPT_MAXREDIRS => 10,
+          CURLOPT_TIMEOUT => 0,
+          CURLOPT_FOLLOWLOCATION => true,
+          CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+          CURLOPT_CUSTOMREQUEST => 'POST',
+          CURLOPT_POSTFIELDS =>'',
+                CURLOPT_HTTPHEADER => array(
+                    'Content-Type: application/json',
+                    'Accept: application/json'
+                ),
+            ));
+
+        $response = curl_exec($curl);
+
+        curl_close($curl);
+        echo $response;
+    }
 
 
 public function createShipment($value='')
@@ -275,8 +413,8 @@ public function createShipment($value='')
 
     $curl = curl_init();
 
-    $date = '10/02/2022';
-    $date1 = '12/02/2022';
+    $date = '2022-02-09';
+    $date1 = '2022-02-10';
 
    $shiping_date_time = \Carbon\Carbon::parse($date)->timestamp;
  $end_date_time = \Carbon\Carbon::parse($date1)->timestamp;
@@ -475,19 +613,31 @@ $myArrayVar = json_encode($arrayVar,1);
 
 }
 
+
+public function stateForCountryAjax($country_id)
+{
+    $states = DB::table("states")
+                ->where("CountryCode",$country_id)
+                ->pluck('Name','id');
+    return $states;
+}
+
 public function createPickup($value='')
 {
-
+    #echo "laxman"; exit;
     
-  $pickup_date = '2022-02-08';
-  $ready_time = '2022-01-08';
-  $last_pickup_time = '2022-02-09';
-  $closing_time = '2022-02-09';
+  $pickup_date = '2022-02-08 15:00:00';
+  $ready_time = '2022-02-08 10:00:00';
+  $last_pickup_time = '2022-02-09 15:00:00';
+  $closing_time = '2022-02-09 10:00:00';
 
-  $shipping_date_time = '2022-02-14';
-  $due_date = '2022-02-14';
+  $shipping_date_time = '2022-02-11 10:00:00';
+  $due_date = '2022-02-12 10:00:00';
 
-  $pickup_date = \Carbon\Carbon::parse($pickup_date)->timestamp; //  Monday, February 7, 2022 6:30:00 PM
+  $pickup_date = \Carbon\Carbon::parse($pickup_date)->timestamp;
+
+  #print_r($pickup_date); exit;
+   //  Monday, February 7, 2022 6:30:00 PM
   $ready_time = \Carbon\Carbon::parse($ready_time)->timestamp;
   $last_pickup_time = \Carbon\Carbon::parse($last_pickup_time)->timestamp;//Tuesday, February 8, 2022 6:30:00 PM
   $closing_time = \Carbon\Carbon::parse($closing_time)->timestamp;
@@ -540,10 +690,10 @@ public function createPickup($value='')
             "Type" => "",
         ],
         "PickupLocation" => "test",
-        "PickupDate" => "/Date(".$pickup_date."000-0800)/",
-        "ReadyTime" => "/Date(".$ready_time."000-1000)/",
+        "PickupDate" => "/Date(".$pickup_date."000-0500)/",
+        "ReadyTime" => "/Date(".$ready_time."000-0500)/",
         "LastPickupTime" => "/Date(".$last_pickup_time."000-0500)/",
-        "ClosingTime" => "/Date(".$closing_time."000-1000)/",
+        "ClosingTime" => "/Date(".$closing_time."000-0500)/",
         "Comments" => "",
         "Reference1" => "001",
         "Reference2" => "",
@@ -556,7 +706,7 @@ public function createPickup($value='')
                 "Shipper" => [
                     "Reference1" => "",
                     "Reference2" => "",
-                    "AccountNumber" => "20016",
+                    "AccountNumber" => "4004636",
                     "PartyAddress" => [
                         "Line1" => "Test",
                         "Line2" => "",
@@ -689,7 +839,7 @@ public function createPickup($value='')
                     "DeliveryInstructions" => null,
                 ],
                 "Attachments" => [],
-                "ForeignHAWB" => "12212121212121",
+                "ForeignHAWB" => "122121212121215",
                 "TransportType " => 0,
                 "PickupGUID" => null,
                 "Number" => "",
@@ -731,6 +881,9 @@ public function createPickup($value='')
     ],
 ];
 
+// echo "<pre>";
+// print_r($arrayVar); exit;
+
 $myArrayVar = json_encode($arrayVar, true);
 
 $curl = curl_init();
@@ -753,6 +906,8 @@ curl_setopt_array($curl, array(
 $response = curl_exec($curl);
 
 $result = json_decode($response,true);
+
+echo "<pre>";print_r($result);"</pre>";exit;
 
 if ($result['HasErrors']) {
   foreach ($result['Notifications'] as $key => $Notifications) {
@@ -1148,8 +1303,7 @@ $data['notification'] = $this->ProductModel->getProductNotification();
 }
 
 public function shopSingle(Request $request ,$name_slug)
-{
-  
+{  
     $data['RelatedProductList'] = array();
     $data['Category'] = $this->ProductModel->CategoryList();
     $data['CategoryA'] = $this->ProductModel->CategoryAList();

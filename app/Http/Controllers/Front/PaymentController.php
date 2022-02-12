@@ -330,11 +330,18 @@ class PaymentController extends Controller
   public function userPaymentForCashOnDelivery(Request $request)
   {
       
-      $requestData  = $request->all();     
+      $requestData  = $request->all();   
+      // echo "<pre>";print_r($requestData);"</pre>";exit;  
       // $amount = $requestData['amount'];
       // $amount = round(\Cart::getTotal()).'.00';
 
-      $amount = session('totalAmountForPaidAfterDiscountAndGST');
+      $shipping_charge = $request->shipping_charges;
+      $total_price = $request->total_price;
+      $amount = $total_price;
+      Session::forget('shippingCharge');
+      Session::forget('totalAmountForPaidAfterDiscountAndGST');
+      session()->put('shippingCharge',$shipping_charge);
+      session()->put('totalAmountForPaidAfterDiscountAndGST',$total_price);
       $userId = session('user_id');
       // $totalGst = $requestData['totalGst'];
       $totalGst = 15;
@@ -364,7 +371,8 @@ $cartItemArray[] = array('id'=>$item->id,
 'discountAmount'=>session('discountAmount'),
 'totalAmountForPaidAfterDiscount'=>session('totalAmountForPaidAfterDiscount'),
 'totalAmountForPaidAfterDiscountAndGST'=>session('totalAmountForPaidAfterDiscountAndGST'),
-'totalGst'=>session('vatToPay')
+'totalGst'=>session('vatToPay'),
+'shipping_charge'=>session('shippingCharge')
  );
  
 }
@@ -393,7 +401,8 @@ $cartItemArray[] = array('id'=>$item->id,
     'status'=>'pending',
     'ip_address'=>$_SERVER['REMOTE_ADDR'],
     'session_id'=>Session::getId(),
-    'txn_date'=>date('Y-m-d H:i:s')
+    'txn_date'=>date('Y-m-d H:i:s'),
+'shipping_charge'=>session('shippingCharge')
 
 );
 

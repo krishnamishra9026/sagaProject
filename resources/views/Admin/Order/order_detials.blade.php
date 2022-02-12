@@ -19,6 +19,21 @@
           <div class="card">
             <div class="card-body">
               <div class="row">
+
+                @if (\Session::has('success'))
+                <div class="alert alert-success">
+                  <ul>
+                    <li>{!! \Session::get('success') !!}</li>
+                  </ul>
+                </div>
+                @endif
+
+                @if($errors->any())
+                <div class="alert alert-danger">
+                  <h4>{{$errors->first()}}</h4>
+                </div>
+                @endif
+
                 <div class="col-sm-6">
                   <h5 class="card-title">Order List</h5>
                 </div>
@@ -54,8 +69,6 @@
                         if($orderData->payment_type=='Cash On Delivery'){
                             $Status = '<span class="badge badge-success m-1">Success</span>';
                         }
-                            //   print_r($user);
-                            //     exit();
                     ?>
                       <tr>
                         <td class="FontSize"><?=$i?></td>
@@ -113,13 +126,13 @@
                 </h4>
             
                                       
-    <form action="{{route('ShipUserOrder')}}" enctype="multipart/form-data" method="post" id="AddForm" name="AddForm"  autocomplete="off">
-      <input type="hidden" name="_token" value="{{ csrf_token() }}">
-      <input type="hidden" name="user_id" value="{{$orderData->user_id}}">
-      <input type="hidden" name="order_id" value="{{$orderData->id}}">
+                <form action="{{route('ShipUserOrder')}}" enctype="multipart/form-data" method="post" id="AddForm" name="AddForm"  autocomplete="off">
+                  <input type="hidden" name="_token" value="{{ csrf_token() }}">
+                  <input type="hidden" name="user_id" value="{{$orderData->user_id}}">
+                  <input type="hidden" name="order_id" value="{{$orderData->id}}">
 
-    <div class="row ">
-         <div class="col-sm-12">
+                  <div class="row ">
+                   <div class="col-sm-12">
                     <div class="form-group">
                       <label for="input-1">Order Type</label>
                       <select class="form-control " id="order_status" name="status" onchange="showpacketdetails(this);" >
@@ -132,55 +145,71 @@
 
                         <!--<option value="trending_item">Trending</option>-->
                       </select>
-                       <span id="product_type_status_msg"></span>
+                      <span id="product_type_status_msg"></span>
                     </div> 
                   </div>
                   
-                  
-                        <div class="col-md-12" id="orderlengthbreadth" style="display:none">
-                        <div class="row"  >
-                    <div class="col-sm-3">
-                    <div class="form-group">
-                      <label for="input-1">Packet length</label>
-                      <input type="text" class="form-control" id="name" name="length" placeholder="in cms" placeholder="Name" onchange="HideErr('product_name_msg')">
-                       <span id="product_name_msg"></span>
+                  @php
+                  $shipmeng_count = \DB::table('order_aramex_shipping_details')->where(['ordered_order_id' => $orderData->id, 's_status' => 'NEW'])->count();
+                  @endphp
+                  @if($shipmeng_count == 1)
+                  @php
+                  $shipment = \DB::table('order_aramex_shipping_details')->where(['ordered_order_id' => $orderData->id, 's_status' => 'NEW'])->value('id');
+                  $shipment_id = \DB::table('order_aramex_shipping_details')->where(['ordered_order_id' => $orderData->id, 's_status' => 'NEW'])->value('shipment_id');
+                  @endphp
+                  <div>
+                    <a class="btn btn-primary" href="{{ route('track-shipping',$shipment_id) }}">Track Shipment</a>
+                  <a class="btn btn-primary" target="_blank" href="{{ route('shipment-label',$shipment_id) }}">Print Label</a>
+                </div> 
 
-                    </div> 
-                  </div>
-                  
-                  <div class="col-sm-3">
-                    <div class="form-group">
-                    <label for="input-1">Packet breadth</label>
-                      <input type="number" class="form-control" id="price" name="breadth" placeholder="in cms" onchange="HideErr('price_msg')" >
-                        <span id="price_msg"></span> 
-                </div>
-                </div>
-                
-                <div class="col-sm-3">
-                    <div class="form-group">
-                      <label for="input-1">Packet height</label>
-                      <input type="text" class="form-control" id="name" name="height" placeholder="in cms" placeholder="Name" onchange="HideErr('product_name_msg')">
-                       <span id="product_name_msg"></span>
+                  <div>
+                    <a class="btn btn-secondary" href="{{ route('track-pickup',$shipment) }}">Track Pickup</a>
+                    <a class="btn btn-primary" target="_blank" href="{{ route('pickup-label',$shipment) }}">Print Label</a>
+                  </div> 
+                  @endif
+                  <div class="col-md-12" id="orderlengthbreadth" @if($shipmeng_count >0) style="display:none;" @endif>
+                    <div class="row"  >
+                      <div class="col-sm-3" style="display:none;">
+                        <div class="form-group">
+                          <label for="input-1">Packet length</label>
+                          <input type="text" class="form-control" id="name" name="length" placeholder="in cms" placeholder="Name" onchange="HideErr('product_name_msg')">
+                          <span id="product_name_msg"></span>
 
-                    </div> 
-                  </div>
-                  
-                  <div class="col-sm-3">
-                    <div class="form-group">
-                    <label for="input-1">Packet weight</label>
-                      <input type="number" class="form-control" id="price" name="weight" placeholder="in kgs." onchange="HideErr('price_msg')" >
-                        <span id="price_msg"></span> 
-                </div>
-                </div>   
-                  </div>
-                                    <!--</div>-->
+                        </div> 
+                      </div>
+
+                      <div class="col-sm-3" style="display:none;">
+                        <div class="form-group">
+                          <label for="input-1">Packet breadth</label>
+                          <input type="number" class="form-control" id="price" name="breadth" placeholder="in cms" onchange="HideErr('price_msg')" >
+                          <span id="price_msg"></span> 
                         </div>
-                        <div class="col-md-12 mb-4">
-                             <button type="submit" class="btn btn-primary pull-right" id="SaveBtn">Submit</button>
+                      </div>
+
+                      <div class="col-sm-3" style="display:none;">
+                        <div class="form-group">
+                          <label for="input-1">Packet height</label>
+                          <input type="text" class="form-control" id="name" name="height" placeholder="in cms" placeholder="Name" onchange="HideErr('product_name_msg')">
+                          <span id="product_name_msg"></span>
+
+                        </div> 
+                      </div>
+
+                      <div class="col-sm-3">
+                        <div class="form-group">
+                          <label for="input-1">Packet weight</label>
+                          <input type="number" class="form-control" id="price" name="weight" placeholder="in kgs." onchange="HideErr('price_msg')" >
+                          <span id="price_msg"></span> 
                         </div>
-                        
-                        <div class="col-md-12">
-                  </form>
+                      </div>   
+                    </div>
+                  </div>
+                  <div class="col-md-12 mb-4">
+                   <button type="submit" class="btn btn-primary pull-right" id="SaveBtn">Submit</button>
+                 </div>
+
+                 <div class="col-md-12">
+                 </form>
 <!--</tr>-->
                   <!--<tr>-->
                     <!--<td align="left" bgcolor="#ffffff">-->
@@ -252,11 +281,11 @@
         </tr>
         <tr>
             <td colspan="6" style="border: 1px solid #dddddd;text-align: left;padding: 8px;" >ORDER TOTAL:</td>
-            <td style="border: 1px solid #dddddd;text-align: left;padding: 8px;">{{$orderDetailsArray[0]->totalAmountForPaidAfterDiscount}}</td>
+            <td style="border: 1px solid #dddddd;text-align: left;padding: 8px;">{{$orderDetailsArray[0]->totalAmountForPaidAfterDiscountAndGST}}</td>
         </tr>
         <tr>
-            <td colspan="6" style="border: 1px solid #dddddd;text-align: left;padding: 8px;" >Vat(15%):</td>
-            <td style="border: 1px solid #dddddd;text-align: left;padding: 8px;">{{$orderData->vat_amt}}</td>
+            <td colspan="6" style="border: 1px solid #dddddd;text-align: left;padding: 8px;" >Shipping Charge:</td>
+            <td style="border: 1px solid #dddddd;text-align: left;padding: 8px;">{{$orderData->shipping_charge}}</td>
         </tr>
         <tr>
             <td colspan="6" style="border: 1px solid #dddddd;text-align: left;padding: 8px;" >You Pay :</td>

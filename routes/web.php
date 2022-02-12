@@ -205,6 +205,12 @@ Route::get('/refund',['as'=>'Refund','uses'=>'OrderController@RefundList']);
 Route::get('/delivered-order',['as'=>'DeliveredOrder','uses'=>'OrderController@DeliveredOrderList']);
 Route::get('/order-tracking',['as'=>'OrderTracking','uses'=>'OrderController@OrderTracking']);
 
+Route::get('/track-shipping/{id}',['as'=>'track-shipping','uses'=>'OrderController@ShipmentTracking']);
+Route::get('/shipment-label/{id}',['as'=>'shipment-label','uses'=>'OrderController@printShipmentLabel']);
+
+Route::get('/track-pickup/{id}',['as'=>'track-pickup','uses'=>'OrderController@PickupTracking']);
+Route::get('/pickup-label/{id}',['as'=>'pickup-label','uses'=>'OrderController@printPickupLable']);
+
 Route::get('/order',['as'=>'Order','uses'=>'OrderController@List']);
 Route::get('/reservation',['as'=>'Reservation','uses'=>'ReservationController@List']);
 Route::get('/generate-invoice/{id}', ['as' => 'GenerateInvoice', 'uses' => 'OrderController@GenerateInvoice']);
@@ -349,8 +355,18 @@ Route::get('/fetch-countries','homeController@fetchCountries')->name('fetch-coun
 
 Route::get('/create-shipment','homeController@createShipment')->name('create-shipment');
 
+Route::get('/state/ajax/{country_id}',array('as'=>'state.ajax','uses'=>'homeController@stateForCountryAjax'));
+
+
 Route::get('/create-pickup','homeController@createPickup')->name('create-pickup');
+
+Route::get('/validate-addres','homeController@validateAddress')->name('validate-address');
+
+Route::post('/validate-post-addres','homeController@validatePostAddress')->name('validate-post-address');
 
 Route::get('/calculate-rate','homeController@calculateRate')->name('calculate-rate');
 
 Route::get('/fetch-states','homeController@fetchStates')->name('fetch-states');
+
+
+Route::get('/',['as'=>'Home','uses'=>'homeController@index']);

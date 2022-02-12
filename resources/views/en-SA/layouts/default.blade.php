@@ -137,7 +137,7 @@
                                 <?php if(!$subcategory->isEmpty()){?>
                                     <a href="Javascript:void(0);" class="nav-link dropdown-toggle" data-toggle="dropdown" >{{ $row->category_name }} <i class="fa fa-angle-down mt-1"></i></a>
                                 <?php }else{?>
-                                    <a href="" class="nav-item nav-link"><?php if($row->category_name=='Home' or $row->category_name=='الرئيسية'){ echo '<i class="fas fa-home"></i>'; }?> {{ $row->category_name }}</a>
+                                    <a href="{{ route('Home') }}" class="nav-item nav-link"><?php if($row->category_name=='Home' or $row->category_name=='الرئيسية'){ echo '<i class="fas fa-home"></i>'; }?> {{ $row->category_name }}</a>
                                 <?php } ?>
                                 <?php 
                                 if(!$subcategory->isEmpty()){?>
@@ -578,13 +578,13 @@ if(dataArray.status == 'success')
 {
 
                 if(langName =='ar'){
-                    if (window.location.href.indexOf("product-listing-subcategory") > -1) {
+                    if ((window.location.href.indexOf("product-listing-subcategory") > -1) || (window.location.href.indexOf("shop-single") > -1)) {
                         window.location.href = siteurl+'/ar-SA';
                     }else{
                         window.location.href = "{{url()->current()}}".replaceAll("en-SA", "ar-SA");
                     }
                 } else{
-                if (window.location.href.indexOf("product-listing-subcategory") > -1) {
+                if ((window.location.href.indexOf("product-listing-subcategory") > -1) || (window.location.href.indexOf("shop-single") > -1)) {
                     window.location.href = siteurl+'/en-SA';
                 }else{
 

@@ -158,7 +158,7 @@
                                 <?php if(!$subcategory->isEmpty()){?>
                                     <a href="Javascript:void(0);" class="nav-link dropdown-toggle" data-toggle="dropdown"> <i class="fa fa-angle-down mt-1"></i> {{ $row->category_name }}</a>
                                 <?php }else{?>
-                                    <a href="" class="nav-item nav-link"> {{ $row->category_name }} <?php if($row->category_name=='Home' or $row->category_name=='الرئيسية'){ echo '<i class="fas fa-home"></i>'; }?></a>
+                                    <a href="{{ route('Home') }}" class="nav-item nav-link"> {{ $row->category_name }} <?php if($row->category_name=='Home' or $row->category_name=='الرئيسية'){ echo '<i class="fas fa-home"></i>'; }?></a>
                                 <?php } ?>
                                 <?php 
                                 if(!$subcategory->isEmpty()){?>
@@ -302,7 +302,7 @@
                 <div class="col-md-4 mb-5">
                     <!--<h5 class="text-secondary text-uppercase mb-4">@if(session('locale')=='en')  Quick Links @else  مدونة  @endif </h5>-->
                     <div class="d-flex flex-column justify-content-start">
-                        <a class="text-secondary mb-2" href=""><i class="fa fa-angle-right mr-2"></i>@if(session('locale')=='en')  Home @else  الرئيسية     @endif </a>
+                        <a class="text-secondary mb-2" href="{{ route('Home') }}"><i class="fa fa-angle-right mr-2"></i>@if(session('locale')=='en')  Home @else  الرئيسية     @endif </a>
                         <a class="text-secondary mb-2" href="{{ route('About') }}"><i class="fa fa-angle-right mr-2"></i>@if(session('locale')=='en')  About Us @else عن الشركة   @endif </a>
                         <a class="text-secondary mb-2" href="{{ route('OurStores') }}"><i class="fa fa-angle-right mr-2"></i>@if(session('locale')=='en')  Our Stores @else   متاجرنا     @endif </a>
                         <!-- <a class="text-secondary mb-2" href=""><i class="fa fa-angle-right mr-2"></i>@if(session('locale')=='en')  Shopping Cart @else السلة  @endif </a> -->
@@ -379,13 +379,13 @@ url: '{{route('ChangeWebLanguage')}}',
               if(dataArray.status == 'success')
               {
                 if(langName =='ar'){
-                    if (window.location.href.indexOf("product-listing-subcategory") > -1) {
+                    if ((window.location.href.indexOf("product-listing-subcategory") > -1) || (window.location.href.indexOf("shop-single") > -1)) {
                         window.location.href = siteurl+'/ar-SA';
                     }else{
                         window.location.href = "{{url()->current()}}".replaceAll("en-SA", "ar-SA");
                     }
                 } else{
-                if (window.location.href.indexOf("product-listing-subcategory") > -1) {
+                if ((window.location.href.indexOf("product-listing-subcategory") > -1) || (window.location.href.indexOf("shop-single") > -1)) {
                     window.location.href = siteurl+'/en-SA';
                 }else{
 

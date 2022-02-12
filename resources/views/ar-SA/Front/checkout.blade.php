@@ -221,8 +221,8 @@ $address_data = json_decode($usersInfo->shipping_address);
 
 	                        <div class="custom-control custom-checkbox mb-3">
                                
-                                <label class="custom-control-label" for="newaccount">ابقني على اطلاع على الاخبار والعروض</label>
-                             <input type="checkbox" required name="keep_me" class="custom-control-input" id="newaccount">
+                             <input type="checkbox" required name="keep_me" class="" id="newaccount">
+                                <label class="" for="newaccount">ابقني على اطلاع على الاخبار والعروض</label>
                             </div>
                         </div>
 
