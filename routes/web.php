@@ -209,6 +209,9 @@ Route::get('/track-shipping/{id}',['as'=>'track-shipping','uses'=>'OrderControll
 Route::get('/shipment-label/{id}',['as'=>'shipment-label','uses'=>'OrderController@printShipmentLabel']);
 
 Route::get('/track-pickup/{id}',['as'=>'track-pickup','uses'=>'OrderController@PickupTracking']);
+
+Route::get('/cancel-pickup/{id}',['as'=>'cancel-pickup','uses'=>'OrderController@cancelPickup']);
+
 Route::get('/pickup-label/{id}',['as'=>'pickup-label','uses'=>'OrderController@printPickupLable']);
 
 Route::get('/order',['as'=>'Order','uses'=>'OrderController@List']);
@@ -219,6 +222,9 @@ Route::get('/get-order-detail/{id}', ['as' => 'GetOrderDetails', 'uses' => 'Orde
 Route::get('/generate-sipment/{id}', ['as' => 'genearteSipment', 'uses' => 'OrderController@genearteSipment']);
 
 Route::post('/ship-user-order',['as'=>'ShipUserOrder','uses'=>'OrderController@ShipUserOrder']);
+
+Route::post('/ship-cod-order',['as'=>'ShipCodOrder','uses'=>'OrderController@ShipCodOrder']);
+
 Route::get('/get-order-serviceability', ['as' => 'OrderServiceability', 'uses' => 'OrderController@CheckCourierServiceabilityOrder']);
 
 

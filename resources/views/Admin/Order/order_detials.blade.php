@@ -125,8 +125,13 @@
                     <!--Order status : {{$orderData->status}}-->
                 </h4>
             
-                                      
+                                        
+                @if($orderData->payment_type == 'online')
                 <form action="{{route('ShipUserOrder')}}" enctype="multipart/form-data" method="post" id="AddForm" name="AddForm"  autocomplete="off">
+                  @else
+                  
+                  <form action="{{route('ShipCodOrder')}}" enctype="multipart/form-data" method="post" id="AddForm" name="AddForm"  autocomplete="off">
+                    @endif
                   <input type="hidden" name="_token" value="{{ csrf_token() }}">
                   <input type="hidden" name="user_id" value="{{$orderData->user_id}}">
                   <input type="hidden" name="order_id" value="{{$orderData->id}}">
@@ -150,12 +155,13 @@
                   </div>
                   
                   @php
-                  $shipmeng_count = \DB::table('order_aramex_shipping_details')->where(['ordered_order_id' => $orderData->id, 's_status' => 'NEW'])->count();
+                  $shipmeng_count = \DB::table('order_aramex_shipping_details')->where(['ordered_order_id' => $orderData->id])->count();
                   @endphp
                   @if($shipmeng_count == 1)
                   @php
-                  $shipment = \DB::table('order_aramex_shipping_details')->where(['ordered_order_id' => $orderData->id, 's_status' => 'NEW'])->value('id');
-                  $shipment_id = \DB::table('order_aramex_shipping_details')->where(['ordered_order_id' => $orderData->id, 's_status' => 'NEW'])->value('shipment_id');
+                  $shipment = \DB::table('order_aramex_shipping_details')->where(['ordered_order_id' => $orderData->id])->value('id');
+                  $shipment_id = \DB::table('order_aramex_shipping_details')->where(['ordered_order_id' => $orderData->id])->value('shipment_id');
+                  $shipment_status = \DB::table('order_aramex_shipping_details')->where(['ordered_order_id' => $orderData->id])->value('s_status');
                   @endphp
                   <div>
                     <a class="btn btn-primary" href="{{ route('track-shipping',$shipment_id) }}">Track Shipment</a>
@@ -164,6 +170,11 @@
 
                   <div>
                     <a class="btn btn-secondary" href="{{ route('track-pickup',$shipment) }}">Track Pickup</a>
+                    @if($shipment_status == 'Canceled')
+                    <a class="btn btn-secondary" href="#">Pickup Canceled</a>
+                    @else
+                    <a class="btn btn-secondary" href="{{ route('cancel-pickup',$shipment) }}">Cancel Pickup</a>
+                    @endif
                     <a class="btn btn-primary" target="_blank" href="{{ route('pickup-label',$shipment) }}">Print Label</a>
                   </div> 
                   @endif

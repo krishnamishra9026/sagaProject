@@ -62,14 +62,23 @@
         <h4>Past orders</h4>
         <div class="card p-3 mb-4 past_order_list">          
           <div class="row">
+            @php
+              $products = json_decode($OrdersDetails[0]->billing_order_details);
+              @endphp
+               @foreach($products as $product)
             <div class="col-lg-2 col-md-3 col-3">
-              <img src="{{ asset('images/menu/small.jpg')}}" class="img-fluid"> 
+              <img src="{{$product->image}}" class="img-fluid"> 
             </div>
+            @endforeach
             <div class="col-lg-8 col-md-7 col-9">
-              <h3>Product Name</h3>
-              <p class="m-0">Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
-              <p class="mb-3"><b>Total amount:  <span class="text-primary">$20</span> </b></p>
-              <a href="javascript:void(0);" class="btn btn-primary2 btn-sm">View Details</a>
+              <p>Order id:- {{$OrdersDetails[0]->order_id}}</p>
+              <p>Total amount: {{$OrdersDetails[0]->txn_amount}}</p>
+              <p>Date: {{date('d-m-Y', strtotime($OrdersDetails[0]->txn_date))}}</p>              
+              @foreach($products as $product)
+              <h3>{{$product->name}}</h3>
+              <p class="mb-3"><b>Total amount:  <span class="text-primary">${{$product->price}}</span> </b></p>
+              @endforeach
+              <a href="{{ route('orders')}}" class="btn btn-primary2 btn-sm">View Details</a>
             </div>
           </div>
         </div>

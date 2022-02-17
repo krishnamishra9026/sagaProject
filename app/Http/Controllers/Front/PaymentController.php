@@ -358,11 +358,13 @@ class PaymentController extends Controller
          
 $cartCollection = \Cart::getContent();
 
+
 foreach( $cartCollection as $item)
 {
 $cartItemArray[] = array('id'=>$item->id,
 'name'=>$item->name,
 'price'=>$item->price,
+'old_price'=>$item->attributes->OldPrice,
 'quantity'=>$item->quantity,
 'image'=>$item->attributes->image,
 'slug'=>$item->attributes->slug,
@@ -414,7 +416,7 @@ $subject = 'User Order Details';
 $email = session('user_email');
 $UserBody = $this->UserMailHtml($orderDetails,$cartItemArray);
 
-$AdminBody = $this->AdminMailHtml($orderDetails,$cartItemArray);
+// $AdminBody = $this->AdminMailHtml($orderDetails,$cartItemArray);
 
 $UserBodyMailStatus = Common::SendMail($email, 'info@cureroot.com', '', '', $subject, $UserBody);
 // $UserBodyMailStatus = Common::SendMail($email, 'er.krishna.mishra@gmail.com', '', '', $subject, $UserBody);

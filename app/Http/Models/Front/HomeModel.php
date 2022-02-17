@@ -13,7 +13,7 @@ class HomeModel extends Model
 	
 	public function OrdersDetails($userId){
 	    
-		$Count = DB::table('orders')->where('user_id',$userId)->get();
+		$Count = DB::table('orders')->latest('id')->where('user_id',$userId)->get();
 		return $Count;
 		
 	}

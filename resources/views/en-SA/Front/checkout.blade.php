@@ -102,7 +102,7 @@ $address_data = json_decode($usersInfo->shipping_address);
                                 <div class="form-group ">
                                 <label class="fixTopFild">State</label>
                                 <select class="custom-select" name="state" id="state">
-                                    <option>Select State</option>
+                                    <option value="">Select State</option>
                                 {{-- @foreach($states as $state)
                                 <option value="{{$state->Name}}" @if($state->Name == @$address_data->state) selected @endif>{{$state->Name}}</option> 
                                  @endforeach --}}
@@ -345,9 +345,12 @@ $address_data = json_decode($usersInfo->shipping_address);
         $('select[name=country]').change(function() {
             $("#city").val('');
             $("#postcode").val('').trigger('change');
+            var id = $(this).val();
+            var url = '{{ route("state.ajax", ":id") }}';
+            url = url.replace(':id', id),
            $.ajax({
 
-              url: '/state/ajax/'+$(this).val(),
+              url: url,
             method: 'get',
             headers:{
               'X-CSRF-TOKEN' : '{{ csrf_token() }}'
@@ -369,7 +372,7 @@ $address_data = json_decode($usersInfo->shipping_address);
         $("#city").val('');
         $("#postcode").val('').trigger('change');
     });
-    $("#city").change(function(event) {
+    $("#city").keyup(function(event) {
         $("#postcode").val('').trigger('change');
     });
 

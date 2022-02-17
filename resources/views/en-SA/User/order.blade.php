@@ -31,58 +31,43 @@
       </div>
      
 
-      <div class="col-lg-3 col-md-3 col-sm-12">
-        <div class="nav flex-column nav-pills pro_nav mb-4">
-          <a class="nav-link" href="{{ route('address') }}">Address</a>
-          <a class="nav-link active" href="{{ route('orders') }}">Orders</a>
+      <div class="col-lg-2 col-md-2 col-sm-12">
+        <div class="nav flex-column nav-pills pro_nav mb-4 ">
+          <a class="nav-link asa" href="{{ route('address') }}">Address</a>
+          <a class="nav-link active asa" href="{{ route('orders') }}">Orders</a>
          
         </div>
       </div>
-      <div class="col-lg-9 col-md-9 col-sm-12">
+      <div class="col-lg-10 col-md-10 col-sm-12">
         <h4>Past orders</h4>
-        
-        <div class="card p-3 mb-4 past_order_list">          
-          <div class="row">
-            <div class="col-lg-2 col-md-3 col-3">
-              <img src="images/menu/small.jpg" class="img-fluid"> 
-            </div>
-            <div class="col-lg-8 col-md-7 col-9">
-              <h3>Product Name</h3>
-              <p class="m-0">(Product Description)Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
-              <p class="m-0"><b>Total amount:  <span>$20</span> </b></p>
-			   <p class="m-0	"><b>Date:  <span>5/12/2021</span> </b></p>
-            </div>
-          </div>
-        </div> <!-- // item -->
-        <div class="card p-3 mb-4 past_order_list">          
-          <div class="row">
-            <div class="col-lg-2 col-md-3 col-3">
-              <img src="images/menu/small.jpg" class="img-fluid"> 
-            </div>
-            <div class="col-lg-8 col-md-7 col-9">
-              <h3>Product Name</h3>
-              <p class="m-0">(Product Description)Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
-               <p class="m-0"><b>Total amount:  <span>$20</span> </b></p>
-			   <p class="m-0	"><b>Date:  <span>5/12/2021</span> </b></p>
-            </div>
-          </div>
-        </div> <!-- // item -->
-        <div class="card p-3 mb-4 past_order_list">          
-          <div class="row">
-            <div class="col-lg-2 col-md-3 col-3">
-              <img src="images/menu/small.jpg" class="img-fluid"> 
-            </div>
-            <div class="col-lg-8 col-md-7 col-9">
-              <h3>Product Name</h3>
-              <p class="m-0">(Product Description)Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
-                <p class="m-0"><b>Total amount:  <span>$20</span> </b></p>
-			   <p class="m-0	"><b>Date:  <span>5/12/2021</span> </b></p>
-            </div>
-          </div>
-        </div> <!-- // item -->
 
+        @foreach($OrdersDetails as $OrdersDetail)
+       
+       <div class="card p-3 mb-4 past_order_list">          
+          <div class="row">
+       <div class="col-lg-12 col-md-12 col-3">
+       <p  style="background: #FFD333;padding: 10px;margin-bottom: 10px ;border-radius: 5px;color: #000;
+       box-shadow: 0 3px 2px rgb(14 13 13);margin-top: -15px; margin-right: -15px ; margin-left: -15px; ">
+       <b>Order id:- </b>  <span>{{ $OrdersDetail->order_id }}.</span></br>
+       <b>Total amount:</b>  <span>{{ $OrdersDetail->txn_amount }}</span></br><b>Date:  <span>{{ date('d-m-Y',strtotime($OrdersDetail->txn_date)) }}</span> </b> </p>
+            </div>
 
-     </div>
+            @foreach(json_decode($OrdersDetail->billing_order_details) as $billing_order_detail))
+
+            <div class="col-lg-2 col-md-3 col-3">
+              <img src="{{$billing_order_detail->image}}" class="img-fluid"> 
+            </div>
+            <div class="col-lg-10 col-md-9 col-9">
+              <h3>{{$billing_order_detail->name}}</h3>
+              <p>Price : {{$billing_order_detail->totalAmountForPaid}}</p>
+            </div>
+            @endforeach
+       
+            </div>
+          </div>
+        </div> 
+
+        @endforeach
 
    </div>
  </div>

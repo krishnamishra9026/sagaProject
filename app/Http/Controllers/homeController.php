@@ -159,11 +159,11 @@ class homeController extends Controller
 
         $arrayVar = [
             "ClientInfo" => [
-                "UserName" => "reem@reem.com",
-                "Password" => "123456789",
+                "UserName" => "armx.ruh.it@gmail.com",
+                "Password" => "YUre@9982",
                 "Version" => "1.0",
-                "AccountNumber" => "4004636",
-                "AccountPin" => "432432",
+                "AccountNumber" => "146265",
+                "AccountPin" => "331432",
                 "AccountEntity" => "RUH",
                 "AccountCountryCode" => "SA",
                 "Source" => 24,
@@ -225,10 +225,12 @@ class homeController extends Controller
                 "DeliveryInstructions" => null,
             ]
         ];
+
+        // echo "<pre>";print_r($arrayVar);"</pre>";exit;
         $dataArray = json_encode($arrayVar,true);
 
         curl_setopt_array($curl, array(
-          CURLOPT_URL => 'https://ws.dev.aramex.net/ShippingAPI.V2/RateCalculator/Service_1_0.svc/json/CalculateRate',
+          CURLOPT_URL => 'https://ws.aramex.net/ShippingAPI.V2/RateCalculator/Service_1_0.svc/json/CalculateRate',
           CURLOPT_RETURNTRANSFER => true,
           CURLOPT_ENCODING => '',
           CURLOPT_MAXREDIRS => 10,
@@ -286,11 +288,11 @@ return $result['TotalAmount'];
                 "Description" => null,
             ],
             "ClientInfo" => [
-                "UserName" => "reem@reem.com",
-                "Password" => "123456789",
+                "UserName" => "armx.ruh.it@gmail.com",
+                "Password" => "YUre@9982",
                 "Version" => "1.0",
-                "AccountNumber" => "4004636",
-                "AccountPin" => "432432",
+                "AccountNumber" => "146265",
+                "AccountPin" => "331432",
                 "AccountEntity" => "RUH",
                 "AccountCountryCode" => "SA",
                 "Source" => 24,
@@ -301,7 +303,7 @@ return $result['TotalAmount'];
 
 
         curl_setopt_array($curl, array(
-          CURLOPT_URL => 'https://ws.dev.aramex.net/ShippingAPI.V2/Location/Service_1_0.svc/json/ValidateAddress',
+          CURLOPT_URL => 'https://ws.aramex.net/ShippingAPI.V2/Location/Service_1_0.svc/json/ValidateAddress',
           CURLOPT_RETURNTRANSFER => true,
           CURLOPT_ENCODING => '',
           CURLOPT_MAXREDIRS => 10,
@@ -325,7 +327,6 @@ return $result['TotalAmount'];
 
         if(!$result['HasErrors']){
             $data = $request->all();
-            // echo "<pre>";print_r($data);"</pre>";exit;
             return response()->json([
                 'success' => true,
                 'data' => $this->calculateRate($data),
@@ -1679,6 +1680,7 @@ public function userProfile(Request $request)
     $data['manuPage'] = $this->ProductModel->manuPage();
     $data['UserDetails'] = $this->HomeModel->UserDetails($userId);
     $data['OrdersDetails'] = $this->HomeModel->OrdersDetails($userId);
+    // echo "<pre>";print_r($data['OrdersDetails']);"</pre>";exit;
     $data['notification'] = $this->ProductModel->getProductNotification();
     $data['gst'] = $this->ProductModel->gst();
 
