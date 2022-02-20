@@ -157,6 +157,15 @@ class homeController extends Controller
     {
         $curl = curl_init();
 
+
+        if ($data['country'] == 'SA') {
+            $product_group = 'DOM';
+            $product_type = 'CDS';
+        }else{
+            $product_group = 'EXP';
+            $product_type = 'EPX';
+        }
+
         $arrayVar = [
             "ClientInfo" => [
                 "UserName" => "armx.ruh.it@gmail.com",
@@ -210,8 +219,8 @@ class homeController extends Controller
                 "DescriptionOfGoods" => null,
                 "GoodsOriginCountry" => null,
                 "NumberOfPieces" => 1,
-                "ProductGroup" => "EXP",
-                "ProductType" => "PPX",
+                "ProductGroup" => $product_group,
+                "ProductType" => $product_type,
                 "PaymentType" => "P",
                 "PaymentOptions" => "",
                 "CustomsValueAmount" => null,

@@ -454,6 +454,15 @@ return View('Admin/Order/order_detials')->with($orders);
    $shiping_date_time = $shipping_date_time;
  $end_date_time = $due_date;
 
+ if ($shipper_address->country == 'SA') {
+   $product_group = 'DOM';
+   $product_type = 'CDS';
+ }else{
+   $product_group = 'EXP';
+   $product_type = 'EPX';
+ }
+
+
  $newVar = [
   'ClientInfo' => [
     'UserName' => 'armx.ruh.it@gmail.com',
@@ -508,43 +517,43 @@ return View('Admin/Order/order_detials')->with($orders);
                 ],
             ],
       'Consignee' => [
-        'Reference1' => '',
-        'Reference2' => '',
-        'AccountNumber' => '',
-        'PartyAddress' => [
-          'Line1' => $shipper_address->address,
-          'Line2' => '',
-          'Line3' => '',
-          'City' => 'riyadh',
-          'StateOrProvinceCode' => '',
-          'PostCode' => '',
-          'CountryCode' => 'SA',
-          'Longitude' => 0,
-          'Latitude' => 0,
-          'BuildingNumber' => '',
-          'BuildingName' => '',
-          'Floor' => '',
-          'Apartment' => '',
-          'POBox' => NULL,
-          'Description' => '',
-        ],
-        'Contact' => [
-          'Department' => '',
-          'PersonName' => 'aramex',
-          'Title' => '',
-          'CompanyName' => 'aramex',
-          'PhoneNumber1' => '00966551511111',
-          'PhoneNumber1Ext' => '',
-          'PhoneNumber2' => '',
-          'PhoneNumber2Ext' => '',
-          'FaxNumber' => '',
-          'CellPhone' => '00966551511111',
-          'EmailAddress' => 'test@test.com',
-          'Type' => '',
-        ],
-      ],
-      "ShippingDateTime" => "/Date(1645275082000)/",
-            "DueDate" => "/Date(1645275082000)/",
+              "Reference1" => "",
+              "Reference2" => "",
+              "AccountNumber" => "4004636",
+              "PartyAddress" => [
+                "Line1" => $shipper_address->address,
+                "Line2" => "",
+                "Line3" => "",
+                "City" => $shipper_address->city,
+                "StateOrProvinceCode" => $shipper_address->state,
+                "PostCode" => $shipper_address->postcode,
+                "CountryCode" => $shipper_address->country,
+                "Longitude" => 0,
+                "Latitude" => 0,
+                "BuildingNumber" => "",
+                "BuildingName" => "",
+                "Floor" => "",
+                "Apartment" => "",
+                "POBox" => null,
+                "Description" => "",
+              ],
+              "Contact" => [
+                "Department" => "",
+                "PersonName" => $shipper_address->name,
+                "Title" => "",
+                "CompanyName" => $shipper_address->name,
+                "PhoneNumber1" => "0112347191",
+                "PhoneNumber1Ext" => "",
+                "PhoneNumber2" => "",
+                "PhoneNumber2Ext" => "",
+                "FaxNumber" => "",
+                "CellPhone" => "0112347191",
+                "EmailAddress" => $shipper_address->email,
+                "Type" => "",
+              ],
+            ],
+      "ShippingDateTime" => "/Date(".$shipping_date_time."000-0500)/",
+      "DueDate" => "/Date(".$due_date."000-0500)/",
       'Comments' => '',
       'PickupLocation' => '',
       'OperationsInstructions' => '',
@@ -559,8 +568,8 @@ return View('Admin/Order/order_detials')->with($orders);
         'DescriptionOfGoods' => 'Bags',
         'GoodsOriginCountry' => 'SA',
         'NumberOfPieces' => 1,
-        'ProductGroup' => 'DOM',
-        'ProductType' => 'CDS',
+        'ProductGroup' => $product_group,
+        'ProductType' => $product_type,
         'PaymentType' => 'P',
         'PaymentOptions' => '',
         'CustomsValueAmount' => NULL,
@@ -595,6 +604,7 @@ return View('Admin/Order/order_detials')->with($orders);
 ];
 
 
+// echo "<pre>";print_r($newVar);"</pre>";exit;
 $myArrayVar = json_encode($newVar,1);
 
     curl_setopt_array($curl, array(
@@ -616,6 +626,8 @@ $myArrayVar = json_encode($newVar,1);
     $response = curl_exec($curl);
 
     $result = json_decode($response,true);
+
+    // echo "<pre>";print_r($result);"</pre>";exit;
 
 
    $message = '';
@@ -892,7 +904,6 @@ $myArrayVar = json_encode($newVar,1);
       );
       return redirect()->back()->with('success', 'Your shipment Created successfully!');   
     }
-
   
    }
    
