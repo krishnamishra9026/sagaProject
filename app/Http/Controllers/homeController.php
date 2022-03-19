@@ -1718,6 +1718,25 @@ public function MenuCertificates(Request $request)
     
 }
 
+
+public function sendMail(Request $request){
+
+        $emails = ['er.krishna.mishra@gmail.com'];
+
+        Mail::send('mail', [
+            'name' => 'krishna mishra'
+        ],
+        function ($message) use ($emails) {
+            $message->to($emails)
+            ->subject('Your Website Contact Enquiry Details');
+        });
+
+        die;
+
+        return back()->with('success', 'Thanks for contacting me, I will get back to you soon!');
+
+    }
+
 public function contactSave(Request $request)
 {
     $contact = new Contact;

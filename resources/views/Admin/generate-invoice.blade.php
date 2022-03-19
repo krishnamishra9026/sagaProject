@@ -231,7 +231,7 @@
      <tr>
         <td colspan="6" style="border: 1px solid #dddddd;text-align: left;padding: 8px;">SUB TOTAL:</td>
        
-        <td style="border: 1px solid #dddddd;text-align: left;padding: 8px;">{{($orderDetailsArray[0]->totalAmountForPaidAfterDiscountAndGST-$orderDetailsArray[0]->shipping_charge)}}</td>
+        <td style="border: 1px solid #dddddd;text-align: left;padding: 8px;">{{(@$orderDetailsArray[0]->totalAmountForPaidAfterDiscountAndGST-@$orderDetailsArray[0]->shipping_charge)}}</td>
 
 </tr> 
 
@@ -256,7 +256,7 @@
         <td colspan="6" style="border: 1px solid #dddddd;text-align: left;padding: 8px;">Shipping Charges</td>
        
      
-        <td style="border: 1px solid #dddddd;text-align: left;padding: 8px;">{{$orderDetailsArray[0]->shipping_charge}}</td>
+        <td style="border: 1px solid #dddddd;text-align: left;padding: 8px;">{{@$orderDetailsArray[0]->shipping_charge}}</td>
 
 </tr>
 

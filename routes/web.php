@@ -376,3 +376,4 @@ Route::get('/fetch-states','homeController@fetchStates')->name('fetch-states');
 
 
 Route::get('/',['as'=>'Home','uses'=>'homeController@index']);
+Route::get('/send-mail',['as'=>'Home','uses'=>'homeController@sendMail']);

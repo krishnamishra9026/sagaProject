@@ -124,7 +124,7 @@
                
                     <!--Order status : {{$orderData->status}}-->
                 </h4>
-            
+            {{'kkkkkkkk'. $orderData->payment_type }}
                                         
                 @if($orderData->payment_type == 'online')
                 <form action="{{route('ShipUserOrder')}}" enctype="multipart/form-data" method="post" id="AddForm" name="AddForm"  autocomplete="off">
@@ -164,8 +164,8 @@
                   $shipment_status = \DB::table('order_aramex_shipping_details')->where(['ordered_order_id' => $orderData->id])->value('s_status');
                   @endphp
                   <div>
-                    <a class="btn btn-primary" href="{{ route('track-shipping',$shipment_id) }}">Track Shipment</a>
-                  <a class="btn btn-primary" target="_blank" href="{{ route('shipment-label',$shipment_id) }}">Print Label</a>
+                   {{--  <a class="btn btn-primary" href="{{ route('track-shipping',$shipment_id) }}">Track Shipment</a>
+                  <a class="btn btn-primary" target="_blank" href="{{ route('shipment-label',$shipment_id) }}">Print Label</a> --}}
                 </div> 
 
                   <div>
