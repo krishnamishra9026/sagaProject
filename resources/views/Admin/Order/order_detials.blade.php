@@ -371,11 +371,17 @@
 
 <script type="text/javascript">
 jQuery(document).ready(function(){
-
+  var today = new Date();   
+  var td = (today.getMonth()+1)+"-"+today.getDate()+"-"+today.getFullYear();
+  var td1 = (today.getMonth()+1)+"-"+(+today.getDate()+1)+"-"+today.getFullYear();
+  var td2 = (today.getMonth()+1)+"-"+(today.getDate()+2)+"-"+today.getFullYear();
+  console.log(td);  
    $("#order_date").flatpickr({
-    enableTime: true,
+    enableTime: false,
+    minDate: today,
     dateFormat: "m-d-Y",
     "disable": [
+     td,td1,td2,
         function(date) {
            return (date.getDay() === 5);  // disable weekends
         }
@@ -384,7 +390,7 @@ jQuery(document).ready(function(){
         "firstDayOfWeek": 1 // set start day of week to Monday
     }
 });
-//$("input[type=submit]").prop("disabled",true);
+
    
 });//ready
 
