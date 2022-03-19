@@ -672,8 +672,6 @@ return View('Admin/Order/order_detials')->with($orders);
 
       $myArrayVar = json_encode($arrayVar, true);
 
-      echo "<pre>";print_r($myArrayVar);"</pre>";exit;
-
       $curl = curl_init();
       curl_setopt_array($curl, array(
         CURLOPT_URL => 'https://ws.aramex.net/ShippingAPI.V2/Shipping/Service_1_0.svc/json/CreatePickup',
@@ -694,8 +692,6 @@ return View('Admin/Order/order_detials')->with($orders);
       $response = curl_exec($curl);
 
       $result = json_decode($response,true);
-
-      // echo "<pre>";print_r($result);"</pre>";exit;
 
       curl_close($curl);
       $message = '';
@@ -1024,7 +1020,7 @@ return View('Admin/Order/order_detials')->with($orders);
           'shipment_id' => $result['Shipments'][0]['ID']
         ]
       );
-       
+
       DB::table('order_aramex_shipping_details')->where(
         'ordered_order_id', $request->order_id
       )->update(
