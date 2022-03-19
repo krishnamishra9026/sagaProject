@@ -82,7 +82,7 @@ $address_data = json_decode($usersInfo->shipping_address);
                             
 
 
-                            </div>
+                           
 
                             <!--<div class="col-md-12">
     	                        <div class="form-group">
