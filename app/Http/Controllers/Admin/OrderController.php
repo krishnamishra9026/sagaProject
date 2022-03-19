@@ -781,196 +781,6 @@ return View('Admin/Order/order_detials')->with($orders);
     $shipping_date_time = \Carbon\Carbon::parse($shipping_date_time)->timestamp;
     $due_date = \Carbon\Carbon::parse($due_date)->timestamp;
 
-
-
-/*create shipment */
-
-
-
-    $curl = curl_init();
-
-   $shiping_date_time = $shipping_date_time;
- $end_date_time = $due_date;
-
-$arrayVar = [
-    "ClientInfo" => [
-        "UserName" => "reem@reem.com",
-        "Password" => "123456789",
-        "Version" => "1.0",
-        "AccountNumber" => "4004636",
-        "AccountPin" => "432432",
-        "AccountEntity" => "RUH",
-        "AccountCountryCode" => "SA",
-        "Source" => 24,
-    ],
-    "LabelInfo" => null,
-    "Shipments" => [
-        [
-            "Reference1" => "",
-            "Reference2" => "",
-            "Reference3" => "",
-            "Shipper" => [
-                "Reference1" => "",
-                "Reference2" => "",
-                "AccountNumber" => "4004636",
-                "PartyAddress" => [
-                 "Line1" => "Horizons Rareness Trading EST",
-                 "Line2" => "office No.2",
-                 "Line3" => "floor No. 1",
-                 "City" => "Riyadh",
-                 "StateOrProvinceCode" => "Saudi Arabia",
-                 "PostCode" => "12173",
-                 "CountryCode" => "SA",
-                 "Longitude" => 0,
-                 "Latitude" => 0,
-                 "BuildingNumber" => 2,
-                 "BuildingName" => null,
-                 "Floor" => 1,
-                 "Apartment" => null,
-                 "POBox" => null,
-                 "Description" => null,
-               ],
-                "Contact" => [
-                  "Department" => "Marketing",
-                  "PersonName" => "Alaa Hamdani",
-                  "Title" => "",
-                  "CompanyName" => "Horizons Rareness Trading EST",
-                  "PhoneNumber1" => "0112347191",
-                  "PhoneNumber1Ext" => "107",
-                  "PhoneNumber2" => "",
-                  "PhoneNumber2Ext" => "",
-                  "FaxNumber" => "",
-                  "CellPhone" => "0558865450",
-                  "EmailAddress" => "marketing@horizons-retail.com",
-                  "Type" => "",
-                ],
-            ],
-            "Consignee" => [
-              "Reference1" => "",
-              "Reference2" => "",
-              "AccountNumber" => "4004636",
-              "PartyAddress" => [
-                "Line1" => $shipper_address->address,
-                "Line2" => "",
-                "Line3" => "",
-                "City" => $shipper_address->city,
-                "StateOrProvinceCode" => $shipper_address->state,
-                "PostCode" => $shipper_address->postcode,
-                "CountryCode" => $shipper_address->country,
-                "Longitude" => 0,
-                "Latitude" => 0,
-                "BuildingNumber" => "",
-                "BuildingName" => "",
-                "Floor" => "",
-                "Apartment" => "",
-                "POBox" => null,
-                "Description" => "",
-              ],
-              "Contact" => [
-                "Department" => "",
-                "PersonName" => $shipper_address->name,
-                "Title" => "",
-                "CompanyName" => $shipper_address->name,
-                "PhoneNumber1" => $billingAddress->mobile,
-                "PhoneNumber1Ext" => $billingAddress->country_code,
-                "PhoneNumber2" => "",
-                "PhoneNumber2Ext" => "",
-                "FaxNumber" => "",
-                "CellPhone" => $billingAddress->mobile,
-                "EmailAddress" => $shipper_address->email,
-                "Type" => "",
-              ],
-            ],
-            "ShippingDateTime" => "/Date(".$shiping_date_time."000-0500)/",
-            "DueDate" => "/Date(".$end_date_time."000-0500)/",
-            "Comments" => "",
-            "PickupLocation" => "",
-            "OperationsInstructions" => "",
-            "AccountingInstrcutions" => "",
-            "Details" => [
-                "Dimensions" => null,
-                "ActualWeight" => ["Unit" => "KG", "Value" => $request->weight],
-                "ChargeableWeight" => null,
-                "DescriptionOfGoods" => "Bags",
-                "GoodsOriginCountry" => "SAU",
-                "NumberOfPieces" => 1,
-                "ProductGroup" => "EXP",
-                "ProductType" => "PDX",
-                "PaymentType" => "P",
-                "PaymentOptions" => "",
-                "CustomsValueAmount" => null,
-                "CashOnDeliveryAmount" => null,
-                "InsuranceAmount" => null,
-                "CashAdditionalAmount" => null,
-                "CashAdditionalAmountDescription" => "",
-                "CollectAmount" => null,
-                "Services" => "",
-                "Items" => [],
-            ],
-            "Attachments" => [],
-            "ForeignHAWB" => '',
-            "TransportType " => 0,
-            "PickupGUID" => "",
-            "Number" => null,
-            "ScheduledDelivery" => null,
-        ],
-    ],
-    "Transaction" => [
-        "Reference1" => "",
-        "Reference2" => "",
-        "Reference3" => "",
-        "Reference4" => "",
-        "Reference5" => "",
-    ],
-];
-// echo "<pre>";print_r($arrayVar);"</pre>";exit;
-$myArrayVar = json_encode($arrayVar,1);
-
-    curl_setopt_array($curl, array(
-      CURLOPT_URL => 'https://ws.dev.aramex.net/ShippingAPI.V2/Shipping/Service_1_0.svc/json/CreateShipments',
-      CURLOPT_RETURNTRANSFER => true,
-      CURLOPT_ENCODING => '',
-      CURLOPT_MAXREDIRS => 10,
-      CURLOPT_TIMEOUT => 0,
-      CURLOPT_FOLLOWLOCATION => true,
-      CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
-      CURLOPT_CUSTOMREQUEST => 'POST',
-      CURLOPT_POSTFIELDS =>$myArrayVar,
-      CURLOPT_HTTPHEADER => array(
-        'Content-Type: application/json',
-        'Accept: application/json'
-    ),
-  ));
-
-    $response = curl_exec($curl);
-
-    $result = json_decode($response,true);
-
-
-   $message = '';
-    if ($result['HasErrors']) {
-      foreach ($result['Notifications'] as $key => $Notifications) {
-        $message .= $Notifications['Message'].', ';
-      }
-
-      return Redirect::back()->withErrors(['msg' => $message]);
-
-    }else{
-      
-
-      DB::table('order_aramex_shipping_details')->insert(
-        [
-          'ordered_order_id' => $request->order_id, 
-          'user_order_id' => $orderDetails->order_id,
-          'user_id' => $request->user_id,
-          'shipment_id' => $result['Shipments'][0]['ID']
-        ]
-      );
-
-    }
-
-
-/*end create shipment */
     $arrayVar = [
       "ClientInfo" => [
         "UserName" => "reem@reem.com",
@@ -1205,6 +1015,16 @@ $myArrayVar = json_encode($arrayVar,1);
       return Redirect::back()->withErrors(['msg' => $message]);
 
     }else{
+
+       DB::table('order_aramex_shipping_details')->insert(
+        [
+          'ordered_order_id' => $request->order_id, 
+          'user_order_id' => $orderDetails->order_id,
+          'user_id' => $request->user_id,
+          'shipment_id' => $result['Shipments'][0]['ID']
+        ]
+      );
+       
       DB::table('order_aramex_shipping_details')->where(
         'ordered_order_id', $request->order_id
       )->update(
