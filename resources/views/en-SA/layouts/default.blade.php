@@ -27,6 +27,7 @@
     <link rel="stylesheet" type="text/css" href="css/msdropdown/dd.css" />
     <script src="js/msdropdown/jquery.dd.min.js"></script>
     <link rel="stylesheet" type="text/css" href="css/msdropdown/flags.css" />   
+
   @yield('css')
   @yield('head')
 </head>
@@ -612,7 +613,8 @@ function change() {
     }
 </script>
 
-
+   
+    
 
 @yield('javascript')
 

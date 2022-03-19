@@ -213,6 +213,14 @@
                           <span id="price_msg"></span> 
                         </div>
                       </div>   
+
+                       <div class="col-sm-3">
+                        <div class="form-group">
+                          <label for="input-1">Shipping date (except friday)</label>
+                         <input required class="form-control"  placeholder="Select Order Date" name="order_date"  id="order_date">
+                          <span id="price_msg"></span> 
+                        </div>
+                      </div>   
                     </div>
                   </div>
                   <div class="col-md-12 mb-4">
@@ -358,8 +366,36 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/pdfmake.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/vfs_fonts.js"></script>
   <script src="https://cdn.datatables.net/buttons/1.6.5/js/buttons.html5.min.js"></script>
+   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+     <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+
+<script type="text/javascript">
+jQuery(document).ready(function(){
+
+   $("#order_date").flatpickr({
+    enableTime: true,
+    dateFormat: "m-d-Y",
+    "disable": [
+        function(date) {
+           return (date.getDay() === 5);  // disable weekends
+        }
+    ],
+    "locale": {
+        "firstDayOfWeek": 1 // set start day of week to Monday
+    }
+});
+//$("input[type=submit]").prop("disabled",true);
+   
+});//ready
+
+</script>
   <script>
+
 $(document).ready(function() {
+  $('button[type="submit"]').prop("disabled",true);
+  $(".flatpickr-day").on("click",function(){
+         $('button[type="submit"]').prop("disabled",false);
+       });
     $('.table').DataTable( {
         dom: 'Bfrtip',
         buttons: [

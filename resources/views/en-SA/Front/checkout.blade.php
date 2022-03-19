@@ -15,6 +15,7 @@ $states = \DB::table('states')->take(20)->get();
 $address_data = json_decode($usersInfo->shipping_address);
 
 ?>
+
 <section class="checkout_page">
     <div class="container-fluid">
         <div class="row px-xl-5">
@@ -45,7 +46,7 @@ $address_data = json_decode($usersInfo->shipping_address);
                                     <label class="custom-control-label" for="newaccount">Keep me up to date on news and offers</label>
                                 </div>
                             </div>
-
+                             
                             <div class="col-md-12">
                             	<h5>@if(session('locale')=='en') Shipping Address @else عنوان الشحن   @endif</h5>
                             </div>
@@ -76,6 +77,11 @@ $address_data = json_decode($usersInfo->shipping_address);
     	                            <label class="sr-only">Address</label>
     	                            <input required class="form-control" type="text" placeholder="Address" name="address" value="{{ @$address_data->address }}" id="address">
     	                        </div>
+                            </div>
+
+                            
+
+
                             </div>
 
                             <!--<div class="col-md-12">
@@ -341,6 +347,7 @@ $address_data = json_decode($usersInfo->shipping_address);
 @section('javascript')
 <script>
     $(function() {
+       
         $("#postcode").trigger('keyup');
         $('select[name=country]').change(function() {
             $("#city").val('');
