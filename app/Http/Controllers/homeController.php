@@ -168,8 +168,8 @@ class homeController extends Controller
 
         $arrayVar = [
             "ClientInfo" => [
-                "UserName" => "armx.ruh.it@gmail.com",
-                "Password" => "YUre@9982",
+                "UserName" => "marketing@horizons-retail.com",
+                "Password" => "aBCD079641+",
                 "Version" => "1.0",
                 "AccountNumber" => "146265",
                 "AccountPin" => "331432",
@@ -297,8 +297,8 @@ return $result['TotalAmount'];
                 "Description" => null,
             ],
             "ClientInfo" => [
-                "UserName" => "armx.ruh.it@gmail.com",
-                "Password" => "YUre@9982",
+                "UserName" => "marketing@horizons-retail.com",
+                "Password" => "aBCD079641+",
                 "Version" => "1.0",
                 "AccountNumber" => "146265",
                 "AccountPin" => "331432",

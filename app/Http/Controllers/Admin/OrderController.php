@@ -409,315 +409,346 @@ return View('Admin/Order/order_detials')->with($orders);
    public function printPickupLable($id)
    {
     $shipment = \DB::table('order_aramex_shipping_details')->where(['id' => $id, 's_status' => 'NEW'])->first();
-    // echo "<pre>";print_r($shipment);"</pre>";exit;
     return redirect()->to($shipment->label_url);
    }
 
-   public function ShipCodOrder(Request $request)
-   {
+    public function ShipCodOrder(Request $request)
+    {
 
-    $pickup_date = date('Y-m-d 09:00:00', strtotime(' +3 day'));
-    $ready_time = date('Y-m-d 09:00:00', strtotime(' +3 day'));
-    $last_pickup_time = date('Y-m-d 17:00:00', strtotime(' +4 day'));
-    $closing_time = date('Y-m-d 17:00:00', strtotime(' +4 day'));
+      $pickup_date = date('Y-m-d 09:00:00', strtotime(' +2 day'));
+      $ready_time = date('Y-m-d 09:00:00', strtotime(' +2 day'));
+      $last_pickup_time = date('Y-m-d 17:00:00', strtotime(' +3 day'));
+      $closing_time = date('Y-m-d 17:00:00', strtotime(' +3 day'));
 
-    $orderDetails = DB::table('orders')
-              ->select('*')
-              ->where('id',$request->order_id)
-              ->first();
-
-    $shipper_address = json_decode($orderDetails->billing_address);
-
-    $country_ext = DB::table('countries')
-              ->where('Code',$shipper_address->country)
-              ->value('InternationalCallingNumber');
-
-    $billingAddress = DB::table('user_authentication_details')
+      $orderDetails = DB::table('orders')
                 ->select('*')
-                ->where('email',$orderDetails->billing_email)
+                ->where('id',$request->order_id)
                 ->first();
 
-    $shipping_date_time = date('Y-m-d 09:00:00', strtotime(' +5 day'));;
-    $due_date = date('Y-m-d 17:00:00', strtotime(' +5 day'));;
+      $shipper_address = json_decode($orderDetails->billing_address);
 
-    $pickup_date = \Carbon\Carbon::parse($pickup_date)->timestamp;
-    $ready_time = \Carbon\Carbon::parse($ready_time)->timestamp;
-    $last_pickup_time = \Carbon\Carbon::parse($last_pickup_time)->timestamp;
-    $closing_time = \Carbon\Carbon::parse($closing_time)->timestamp;
-    $shipping_date_time = \Carbon\Carbon::parse($shipping_date_time)->timestamp;
-    $due_date = \Carbon\Carbon::parse($due_date)->timestamp;
+      $country_ext = DB::table('countries')
+                ->where('Code',$shipper_address->country)
+                ->value('InternationalCallingNumber');
 
-    if ($shipper_address->country == 'SA') {
-     $product_group = 'DOM';
-     $product_type = 'CDS';
-   }else{
-     $product_group = 'EXP';
-     $product_type = 'EPX';
-   }
+      $billingAddress = DB::table('user_authentication_details')
+                  ->select('*')
+                  ->where('email',$orderDetails->billing_email)
+                  ->first();
 
-    $arrayVar = [
-      "ClientInfo" => [
-        "UserName" => "armx.ruh.it@gmail.com",
-        "Password" => "YUre@9982",
-        "Version" => "1.0",
-        "AccountNumber" => "146265",
-        "AccountPin" => "331432",
-        "AccountEntity" => "RUH",
-        "AccountCountryCode" => "SA",
-        "Source" => 24,
-      ],
-      "LabelInfo" => ["ReportID" => 9201, "ReportType" => "URL"],
-      "Pickup" => [
-        "PickupAddress" => [
-          "Line1" => "Horizons Rareness Trading EST",
-          "Line2" => "office No.2",
-          "Line3" => "floor No. 1",
-          "City" => "Riyadh",
-          "StateOrProvinceCode" => "Saudi Arabia",
-          "PostCode" => "12173",
-          "CountryCode" => "SA",
-          "Longitude" => 0,
-          "Latitude" => 0,
-          "BuildingNumber" => 2,
-          "BuildingName" => null,
-          "Floor" => 1,
-          "Apartment" => null,
-          "POBox" => null,
-          "Description" => null,
-        ],
-        "PickupContact" => [
-          "Department" => "Marketing",
-          "PersonName" => "Alaa Hamdani",
-          "Title" => "",
-          "CompanyName" => "Horizons Rareness Trading EST",
-          "PhoneNumber1" => "0112347191",
-          "PhoneNumber1Ext" => "107",
-          "PhoneNumber2" => "",
-          "PhoneNumber2Ext" => "",
-          "FaxNumber" => "",
-          "CellPhone" => "0558865450",
-          "EmailAddress" => "marketing@horizons-retail.com",
-          "Type" => "",
-        ],
-        "PickupLocation" => "Riyadh, Saudi Arabia",
-        "PickupDate" => "/Date(".$pickup_date."000-0500)/",
-        "ReadyTime" => "/Date(".$ready_time."000-0500)/",
-        "LastPickupTime" => "/Date(".$last_pickup_time."000-0500)/",
-        "ClosingTime" => "/Date(".$closing_time."000-0500)/",
-        "Comments" => "",
-        "Reference1" => 'test',
-        "Reference2" => "",
-        "Vehicle" => "",
-        "Shipments" => [
-          [
-            "Reference1" => "",
-            "Reference2" => "",
-            "Reference3" => "",
-            "Shipper" => [
-              "Reference1" => "",
-              "Reference2" => "",
-              "AccountNumber" => "146265",
-              "PartyAddress" => [
-                "Line1" => "Horizons Rareness Trading EST",
-                "Line2" => "office No.2",
-                "Line3" => "floor No. 1",
-                "City" => "Riyadh",
-                "StateOrProvinceCode" => "Saudi Arabia",
-                "PostCode" => "12173",
-                "CountryCode" => "SA",
-                "Longitude" => 0,
-                "Latitude" => 0,
-                "BuildingNumber" => 2,
-                "BuildingName" => null,
-                "Floor" => 1,
-                "Apartment" => null,
-                "POBox" => null,
-                "Description" => null,
-              ],
-              "Contact" => [
-                "Department" => "Marketing",
-                "PersonName" => "Alaa Hamdani",
-                "Title" => "",
-                "CompanyName" => "Horizons Rareness Trading EST",
-                "PhoneNumber1" => "0112347191",
-                "PhoneNumber1Ext" => "107",
-                "PhoneNumber2" => "",
-                "PhoneNumber2Ext" => "",
-                "FaxNumber" => "",
-                "CellPhone" => "0558865450",
-                "EmailAddress" => "marketing@horizons-retail.com",
-                "Type" => "",
-              ],
-            ],
-            "Consignee" => [
-              "Reference1" => "",
-              "Reference2" => "",
-              "AccountNumber" => "4004636",
-              "PartyAddress" => [
-                "Line1" => $shipper_address->address,
-                "Line2" => "",
-                "Line3" => "",
-                "City" => $shipper_address->city,
-                "StateOrProvinceCode" => $shipper_address->state,
-                "PostCode" => $shipper_address->postcode,
-                "CountryCode" => $shipper_address->country,
-                "Longitude" => 0,
-                "Latitude" => 0,
-                "BuildingNumber" => "",
-                "BuildingName" => "",
-                "Floor" => "",
-                "Apartment" => "",
-                "POBox" => null,
-                "Description" => "",
-              ],
-              "Contact" => [
-                "Department" => "",
-                "PersonName" => $shipper_address->name,
-                "Title" => "",
-                "CompanyName" => $shipper_address->name,
-                "PhoneNumber1" => $country_ext.$shipper_address->phone,
-                "PhoneNumber1Ext" => "",
-                "PhoneNumber2" => "",
-                "PhoneNumber2Ext" => "",
-                "FaxNumber" => "",
-                "CellPhone" => $country_ext.$shipper_address->phone,
-                "EmailAddress" => $shipper_address->email,
-                "Type" => "",
-              ],
-            ],
-            "ShippingDateTime" => "/Date(".$shipping_date_time."000-0500)/",
-            "DueDate" => "/Date(".$due_date."000-0500)/",
-            "Comments" => "Comments ...",
-            "PickupLocation" => "Reception",
-            "OperationsInstructions" => "Fragile",
-            "AccountingInstrcutions" => "Get us a discount please",
-            "Details" => [
-              "Dimensions" => null,
-              "ActualWeight" => ["Unit" => "KG", "Value" => $request->weight],
-              "ChargeableWeight" => null,
-              "DescriptionOfGoods" => "Bags",
-              "GoodsOriginCountry" => "SA",
-              "NumberOfPieces" => 1,
-              "ProductGroup" => $product_group,
-              "ProductType" => $product_type,
-              "PaymentType" => "P",
-              "PaymentOptions" => "",
-              "CustomsValueAmount" => ["CurrencyCode" => "QAR", "Value" => $orderDetails->txn_amount],
-              "CashOnDeliveryAmount" => ["CurrencyCode" => "QAR", "Value" => $orderDetails->txn_amount],
-              "InsuranceAmount" => null,
-              "CashAdditionalAmount" => null,
-              "CashAdditionalAmountDescription" => "",
-              "CollectAmount" => null,
-              "Services" => "CODS",
-              "Items" => [],
-              "DeliveryInstructions" => null,
-            ],
-            "Attachments" => [],
-            "ForeignHAWB" => '',
-            "TransportType " => 0,
-            "PickupGUID" => null,
-            "Number" => "",
-            "ScheduledDelivery" => null,
-          ],
-        ],
-        "PickupItems" => [
-          [
-            "ProductGroup" => "EXP",
-            "ProductType" => "PDX",
-            "NumberOfShipments" => 1,
-            "PackageType" => "Box",
-            "Payment" => "P",
-            "ShipmentWeight" => ["Unit" => "KG", "Value" => $request->weight],
-            "ShipmentVolume" => null,
-            "NumberOfPieces" => 1,
-            "CashAmount" => null,
-            "ExtraCharges" => null,
-            "ShipmentDimensions" => [
-              "Length" => 0,
-              "Width" => 0,
-              "Height" => 0,
-              "Unit" => "",
-            ],
-            "Comments" => "Test",
-          ],
-        ],
-        "Status" => "Ready",
-        "ExistingShipments" => null,
-        "Branch" => "",
-        "RouteCode" => "",
-      ],
-      "Transaction" => [
-        "Reference1" => "",
-        "Reference2" => "",
-        "Reference3" => "",
-        "Reference4" => "",
-        "Reference5" => "",
-      ],
-    ];
+      $shipping_date_time = date('Y-m-d 09:00:00', strtotime(' +4 day'));;
+      $due_date = date('Y-m-d 17:00:00', strtotime(' +4 day'));;
 
-    $myArrayVar = json_encode($arrayVar, true);
+      $pickup_date = \Carbon\Carbon::parse($pickup_date)->timestamp;
+      $ready_time = \Carbon\Carbon::parse($ready_time)->timestamp;
+      $last_pickup_time = \Carbon\Carbon::parse($last_pickup_time)->timestamp;
+      $closing_time = \Carbon\Carbon::parse($closing_time)->timestamp;
+      $shipping_date_time = \Carbon\Carbon::parse($shipping_date_time)->timestamp;
+      $due_date = \Carbon\Carbon::parse($due_date)->timestamp;
 
-    $curl = curl_init();
-    curl_setopt_array($curl, array(
-      CURLOPT_URL => 'https://ws.aramex.net/ShippingAPI.V2/Shipping/Service_1_0.svc/json/CreatePickup',
-      CURLOPT_RETURNTRANSFER => true,
-      CURLOPT_ENCODING => '',
-      CURLOPT_MAXREDIRS => 10,
-      CURLOPT_TIMEOUT => 0,
-      CURLOPT_FOLLOWLOCATION => true,
-      CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
-      CURLOPT_CUSTOMREQUEST => 'POST',
-      CURLOPT_POSTFIELDS =>$myArrayVar,
-      CURLOPT_HTTPHEADER => array(
-        'Content-Type: application/json',
-        'Accept: application/json'
-      ),
-    ));
-
-    $response = curl_exec($curl);
-
-    $result = json_decode($response,true);
-
-    // echo "<pre>";print_r($result);"</pre>";exit;
+      if ($shipper_address->country == 'SA') {
+       $product_group = 'DOM';
+       $product_type = 'CDS';
+     }else{
+       $product_group = 'EXP';
+       $product_type = 'EPX';
+     }
 
 
-    curl_close($curl);
-    $message = '';
-    if ($result['HasErrors']) {
-      foreach ($result['Notifications'] as $key => $Notifications) {
-        $message .= $Notifications['Message'].', ';
+     $req_url = 'https://api.exchangerate-api.com/v4/latest/SAR';
+     $response_json = file_get_contents($req_url);
+
+
+     if(false !== $response_json) {
+      try {
+        $response_object = json_decode($response_json);
+        $base_price = $orderDetails->txn_amount;
+        $USD_price = round(($base_price * $response_object->rates->USD), 2);
+
       }
-
-      return Redirect::back()->withErrors(['msg' => $message]);
-
-    }else{
-
-      DB::table('order_aramex_shipping_details')->insert(
-        [
-          'ordered_order_id' => $request->order_id, 
-          'user_order_id' => $orderDetails->order_id,
-          'user_id' => $request->user_id,
-          'shipment_id' => $result['ProcessedPickup']['ProcessedShipments'][0]['ID']
-        ]
-      );
-
-      DB::table('order_aramex_shipping_details')->where(
-        'ordered_order_id', $request->order_id
-      )->update(
-        [          
-          'label_url' => $result['ProcessedPickup']['ProcessedShipments'][0]['ShipmentLabel']['LabelURL'],
-          's_awb_code' => $result['ProcessedPickup']['ProcessedShipments'][0]['ForeignHAWB'],
-          's_status' => 'NEW',
-          'pay_type' => 'Cod',
-          'packet_weight' => $result['ProcessedPickup']['ProcessedShipments'][0]['ShipmentDetails']['ChargeableWeight']['Value'],
-          's_order_id' => $result['ProcessedPickup']['ID'],
-          'pickupguid' => $result['ProcessedPickup']['GUID'],
-          's_shipment_id' => $result['ProcessedPickup']['ProcessedShipments'][0]['ID'],
-        ]
-      );
-      return redirect()->back()->with('success', 'Your shipment Created successfully!');   
+      catch(Exception $e) {
+      }
     }
-    
+
+      $arrayVar = [
+        "ClientInfo" => [
+          "UserName" => "marketing@horizons-retail.com",
+          "Password" => "aBCD079641+",
+          "Version" => "1.0",
+          "AccountNumber" => "146265",
+          "AccountPin" => "331432",
+          "AccountEntity" => "RUH",
+          "AccountCountryCode" => "SA",
+          "Source" => 24,
+        ],
+        "LabelInfo" => ["ReportID" => 9201, "ReportType" => "URL"],
+        "Pickup" => [
+          "PickupAddress" => [
+            "Line1" => "Horizons Rareness Trading EST",
+            "Line2" => "office No.2",
+            "Line3" => "floor No. 1",
+            "City" => "Riyadh",
+            "StateOrProvinceCode" => "Saudi Arabia",
+            "PostCode" => "12173",
+            "CountryCode" => "SA",
+            "Longitude" => 0,
+            "Latitude" => 0,
+            "BuildingNumber" => 2,
+            "BuildingName" => null,
+            "Floor" => 1,
+            "Apartment" => null,
+            "POBox" => null,
+            "Description" => null,
+          ],
+          "PickupContact" => [
+            "Department" => "Marketing",
+            "PersonName" => "Alaa Hamdani",
+            "Title" => "",
+            "CompanyName" => "Horizons Rareness Trading EST",
+            "PhoneNumber1" => "0112347191",
+            "PhoneNumber1Ext" => "107",
+            "PhoneNumber2" => "",
+            "PhoneNumber2Ext" => "",
+            "FaxNumber" => "",
+            "CellPhone" => "0558865450",
+            "EmailAddress" => "marketing@horizons-retail.com",
+            "Type" => "",
+          ],
+          "PickupLocation" => "Riyadh, Saudi Arabia",
+          "PickupDate" => "/Date(".$pickup_date."000-0500)/",
+          "ReadyTime" => "/Date(".$ready_time."000-0500)/",
+          "LastPickupTime" => "/Date(".$last_pickup_time."000-0500)/",
+          "ClosingTime" => "/Date(".$closing_time."000-0500)/",
+          "Comments" => "",
+          "Reference1" => 'test',
+          "Reference2" => "",
+          "Vehicle" => "",
+          "Shipments" => [
+            [
+              "Reference1" => "",
+              "Reference2" => "",
+              "Reference3" => "",
+              "Shipper" => [
+                "Reference1" => "",
+                "Reference2" => "",
+                "AccountNumber" => "146265",
+                "PartyAddress" => [
+                  "Line1" => "Horizons Rareness Trading EST",
+                  "Line2" => "office No.2",
+                  "Line3" => "floor No. 1",
+                  "City" => "Riyadh",
+                  "StateOrProvinceCode" => "Saudi Arabia",
+                  "PostCode" => "12173",
+                  "CountryCode" => "SA",
+                  "Longitude" => 0,
+                  "Latitude" => 0,
+                  "BuildingNumber" => 2,
+                  "BuildingName" => null,
+                  "Floor" => 1,
+                  "Apartment" => null,
+                  "POBox" => null,
+                  "Description" => null,
+                ],
+                "Contact" => [
+                  "Department" => "Marketing",
+                  "PersonName" => "Alaa Hamdani",
+                  "Title" => "",
+                  "CompanyName" => "Horizons Rareness Trading EST",
+                  "PhoneNumber1" => "0112347191",
+                  "PhoneNumber1Ext" => "107",
+                  "PhoneNumber2" => "",
+                  "PhoneNumber2Ext" => "",
+                  "FaxNumber" => "",
+                  "CellPhone" => "0558865450",
+                  "EmailAddress" => "marketing@horizons-retail.com",
+                  "Type" => "",
+                ],
+              ],
+              "Consignee" => [
+                "Reference1" => "",
+                "Reference2" => "",
+                "AccountNumber" => "4004636",
+                "PartyAddress" => [
+                  "Line1" => $shipper_address->address,
+                  "Line2" => "",
+                  "Line3" => "",
+                  "City" => $shipper_address->city,
+                  "StateOrProvinceCode" => $shipper_address->state,
+                  "PostCode" => $shipper_address->postcode,
+                  "CountryCode" => $shipper_address->country,
+                  "Longitude" => 0,
+                  "Latitude" => 0,
+                  "BuildingNumber" => "",
+                  "BuildingName" => "",
+                  "Floor" => "",
+                  "Apartment" => "",
+                  "POBox" => null,
+                  "Description" => "",
+                ],
+                "Contact" => [
+                  "Department" => "",
+                  "PersonName" => $shipper_address->name,
+                  "Title" => "",
+                  "CompanyName" => $shipper_address->name,
+                  "PhoneNumber1" => $shipper_address->phone,
+                  "PhoneNumber1Ext" => "",
+                  "PhoneNumber2" => "",
+                  "PhoneNumber2Ext" => "",
+                  "FaxNumber" => "",
+                  "CellPhone" => $country_ext.$shipper_address->phone,
+                  "EmailAddress" => $shipper_address->email,
+                  "Type" => "",
+                ],
+              ],
+              "ShippingDateTime" => "/Date(".$shipping_date_time."000-0500)/",
+              "DueDate" => "/Date(".$due_date."000-0500)/",
+              "Comments" => "Comments ...",
+              "PickupLocation" => "Reception",
+              "OperationsInstructions" => "Fragile",
+              "AccountingInstrcutions" => "Get us a discount please",
+              "Details" => [
+                "Dimensions" => null,
+                "ActualWeight" => ["Unit" => "KG", "Value" => $request->weight],
+                "ChargeableWeight" => null,
+                "DescriptionOfGoods" => "Bags",
+                "GoodsOriginCountry" => "SA",
+                "NumberOfPieces" => 1,
+                "ProductGroup" => $product_group,
+                "ProductType" => $product_type,
+                "PaymentType" => "P",
+                "PaymentOptions" => "",
+                "CustomsValueAmount" => ["CurrencyCode" => "USD", "Value" => $USD_price],
+                "CashOnDeliveryAmount" => ["CurrencyCode" => "USD", "Value" => $USD_price],
+                "InsuranceAmount" => null,
+                "CashAdditionalAmount" => null,
+                "CashAdditionalAmountDescription" => "",
+                "CollectAmount" => null,
+                "Services" => "CODS",
+                "Items" => [],
+                "DeliveryInstructions" => null,
+              ],
+              "Attachments" => [],
+              "ForeignHAWB" => '',
+              "TransportType " => 0,
+              "PickupGUID" => null,
+              "Number" => "",
+              "ScheduledDelivery" => null,
+            ],
+          ],
+          "PickupItems" => [
+            [
+              "ProductGroup" => "EXP",
+              "ProductType" => "PDX",
+              "NumberOfShipments" => 1,
+              "PackageType" => "Box",
+              "Payment" => "P",
+              "ShipmentWeight" => ["Unit" => "KG", "Value" => $request->weight],
+              "ShipmentVolume" => null,
+              "NumberOfPieces" => 1,
+              "CashAmount" => null,
+              "ExtraCharges" => null,
+              "ShipmentDimensions" => [
+                "Length" => 0,
+                "Width" => 0,
+                "Height" => 0,
+                "Unit" => "",
+              ],
+              "Comments" => "Test",
+            ],
+          ],
+          "Status" => "Ready",
+          "ExistingShipments" => null,
+          "Branch" => "",
+          "RouteCode" => "",
+        ],
+        "Transaction" => [
+          "Reference1" => "",
+          "Reference2" => "",
+          "Reference3" => "",
+          "Reference4" => "",
+          "Reference5" => "",
+        ],
+      ];
+
+      $myArrayVar = json_encode($arrayVar, true);
+
+      echo "<pre>";print_r($myArrayVar);"</pre>";exit;
+
+      $curl = curl_init();
+      curl_setopt_array($curl, array(
+        CURLOPT_URL => 'https://ws.aramex.net/ShippingAPI.V2/Shipping/Service_1_0.svc/json/CreatePickup',
+        CURLOPT_RETURNTRANSFER => true,
+        CURLOPT_ENCODING => '',
+        CURLOPT_MAXREDIRS => 10,
+        CURLOPT_TIMEOUT => 0,
+        CURLOPT_FOLLOWLOCATION => true,
+        CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+        CURLOPT_CUSTOMREQUEST => 'POST',
+        CURLOPT_POSTFIELDS =>$myArrayVar,
+        CURLOPT_HTTPHEADER => array(
+          'Content-Type: application/json',
+          'Accept: application/json'
+        ),
+      ));
+
+      $response = curl_exec($curl);
+
+      $result = json_decode($response,true);
+
+      // echo "<pre>";print_r($result);"</pre>";exit;
+
+      curl_close($curl);
+      $message = '';
+      if ($result['HasErrors']) {
+        foreach ($result['Notifications'] as $key => $Notifications) {
+          $message .= $Notifications['Message'].', ';
+        }
+
+        return Redirect::back()->withErrors(['msg' => $message]);
+
+      }else{
+
+        if (count($result['ProcessedPickup']['ProcessedShipments'][0]['Notifications']) > 0) {
+          $message = '';
+      if ($result['ProcessedPickup']['ProcessedShipments'][0]['Notifications']) {
+        foreach ($result['ProcessedPickup']['ProcessedShipments'][0]['Notifications'] as $key => $Notifications) {
+          $message .= $Notifications['Message'].', ';
+        }
+
+         return Redirect::back()->withErrors(['msg' => $message]);
+
+        }
+      }else{
+
+
+
+        DB::table('order_aramex_shipping_details')->insert(
+          [
+            'ordered_order_id' => $request->order_id, 
+            'user_order_id' => $orderDetails->order_id,
+            'user_id' => $request->user_id,
+            'shipment_id' => $result['ProcessedPickup']['ProcessedShipments'][0]['ID']
+          ]
+        );
+
+        DB::table('order_aramex_shipping_details')->where(
+          'ordered_order_id', $request->order_id
+        )->update(
+          [          
+            'label_url' => $result['ProcessedPickup']['ProcessedShipments'][0]['ShipmentLabel']['LabelURL'],
+            's_awb_code' => $result['ProcessedPickup']['ProcessedShipments'][0]['ForeignHAWB'],
+            's_status' => 'NEW',
+            'pay_type' => 'Cod',
+            'packet_weight' => $result['ProcessedPickup']['ProcessedShipments'][0]['ShipmentDetails']['ChargeableWeight']['Value'],
+            's_order_id' => $result['ProcessedPickup']['ID'],
+            'pickupguid' => $result['ProcessedPickup']['GUID'],
+            's_shipment_id' => $result['ProcessedPickup']['ProcessedShipments'][0]['ID'],
+          ]
+        );
+        return redirect()->back()->with('success', 'Your shipment Created successfully!');   
+      }
+    }
+      
   }
    
    public function ShipUserOrder(Request $request)
